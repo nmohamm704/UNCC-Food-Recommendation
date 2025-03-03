@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodMatch</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #4da6ff;
+            padding: 10px 20px;
+            color: white;
+        }
+        .logo img {
+            height: 40px;
+        }
+        .search-bar {
+            display: flex;
+            background: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+        }
+        .search-bar input {
+            border: none;
+            outline: none;
+            padding: 5px;
+        }
+        .icons {
+            display: flex;
+            align-items: center;
+        }
+        .icons button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .icons img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .profile-pic {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+        .container {
+            display: flex;
+            height: calc(100vh - 50px);
+        }
+        aside {
+            width: 300px;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .filter-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #e0e0e0;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .matches h2 {
+            margin-bottom: 10px;
+        }
+        .match {
+            padding: 10px;
+            background: #f8f8f8;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        main {
+            flex: 1;
+            background: #ddd;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img src="/mnt/data/image0.jpg" alt="FoodMatch Logo">
+    </div>
+    <div class="search-bar">
+        <input type="text" placeholder="Search">
+        <button> search</button>
+    </div>
+    <div class="icons">
+
+    </div>
+</header>
+
+<div class="container">
+    <aside>
+        <button class="filter-btn"> No Filters Selected</button>
+        <div class="matches">
+            <h2>Matches</h2>
+            <div class="match"> Restaurant <br> <span>Cuisine</span></div>
+            <div class="match"> Restaurant <br> <span>Cuisine</span></div>
+            <div class="match"> Restaurant <br> <span>Cuisine</span></div>
+            <div class="match"> Restaurant <br> <span>Cuisine</span></div>
+        </div>
+    </aside>
+ <!--this is where map will go-->
+</div>
+</body>
+</html>
