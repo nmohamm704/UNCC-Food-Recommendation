@@ -1,3 +1,87 @@
+:root {
+    --first-color: #20A4F3;
+    --second-color: #85E4A0;
+    --third-color: #FFED93;
+    --forth-color: #FFB8CD;
+    --white-color: #F1F2EE;
+    --black-color: #000000;
+    --title-color: #44D66E;
+    --blue-color: #5aa9e6;
+
+
+}
+
+body {
+
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: var(--white-color);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    height: calc(100vh - 70px);
+    overflow: hidden;
+}
+
+header {
+    color: var(--first-color);
+    background-color: var(--first-color);
+    text-align: left;
+    padding: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-family: 'Red Hat Display', sans-serif;
+    border-radius: 10px;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+
+.match{
+    padding: 20px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+
+
+
+
+
+
 
  .toggle-checkbox {
      display: none;
@@ -27,7 +111,7 @@
 }
 
 .toggle-checkbox:checked + .toggle-label {
-    background-color: #2196F3;
+    background-color: #2124cf;
 }
 
 .toggle-checkbox:checked + .toggle-label::before {

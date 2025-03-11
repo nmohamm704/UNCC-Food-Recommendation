@@ -2,8 +2,12 @@ const toggleCheckbox = document.getElementById('my-toggle');
 
 toggleCheckbox.addEventListener('change', function() {
     if (this.checked) {
-        console.log("Toggle is ON");
+        document.body.style.backgroundColor = "black";
+        document.body.style.color = "white";
+        console.log("Dark Mode ON");
     } else {
-        console.log("Toggle is OFF");
+        document.body.style.backgroundColor = "white";
+        document.body.style.color = "black";
+        console.log("Light Mode ON");
     }
 });
