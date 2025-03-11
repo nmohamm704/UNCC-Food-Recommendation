@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Toggle Switch</title>
+    <style>
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            background-color: #ccc;
+            border-radius: 34px;
+            transition: background 0.4s;
+        }
+
+        .toggle-label::before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #fff;
+            transition: 0.4s;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #2196F3;
+        }
+
+        .toggle-checkbox:checked + .toggle-label::before {
+            transform: translateX(26px);
+        }
+    </style>
 </head>
 <body>
+
+<div class="toggle-container">
+    <input type="checkbox" id="my-toggle" class="toggle-checkbox">
+    <label for="my-toggle" class="toggle-label"></label>
+</div>
+
+<script>
+    const toggleCheckbox = document.getElementById('my-toggle');
+
+    toggleCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            console.log("Toggle is ON");
+        } else {
+            console.log("Toggle is OFF");
+        }
+    });
+</script>
 
 </body>
 </html>
