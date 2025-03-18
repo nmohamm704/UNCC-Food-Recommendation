@@ -40,6 +40,13 @@ header {
 
 }
 
+.profile-img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+
+}
+
 body {
 
     font-size: 16px;
@@ -82,9 +89,6 @@ aside {
     display: flex;
     height: calc(100vh - 50px);
 }
-
-
-
 
 .match{
     padding: 20px;
