@@ -1,62 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Toggle Switch</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodMatch</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/map.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
     <style>
-        .toggle-checkbox {
-            display: none;
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #4da6ff;
+            padding: 10px 20px;
+            color: white;
+        }
+        .logo img {
+            height: 75px;
+        }
+        .search-bar {
+            display: flex;
+            background: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            width: 35rem;
+        }
+        .search-bar input {
+            border: none;
+            outline: none;
+            padding: 5px;
+            width: 35rem;
+        }
+        .icons {
+            display: flex;
+            align-items: center;
+        }
+        .icons button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .icons img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
         }
 
-        .toggle-label {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-            background-color: #ccc;
-            border-radius: 34px;
-            transition: background 0.4s;
+
+
+        .filter-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #e0e0e0;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .matches h2 {
+            margin-bottom: 10px;
         }
 
-        .toggle-label::before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: #fff;
-            transition: 0.4s;
-            border-radius: 50%;
-            z-index: 2;
-        }
-
-        .toggle-checkbox:checked + .toggle-label {
-            background-color: #2196F3;
-        }
-
-        .toggle-checkbox:checked + .toggle-label::before {
-            transform: translateX(26px);
+        iframe {
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
+<header>
+    <div class="logo">
+        <img src="../images/Logo.png" alt="FoodMatch Logo">
+    </div>
+    <h1>FoodMatch</h1>
+    <div class="search-bar">
+        <input type="text" placeholder="Search">
+        <button> search</button>
+    </div>
+    <div class="icons">
+    </div>
+    <div class="toggle-container">
+        <input type="checkbox" id="my-toggle" class="toggle-checkbox">
+        <label for="my-toggle" class="toggle-label"></label>
+    </div>
+    <div class=profile-img>
 
-<div class="toggle-container">
-    <input type="checkbox" id="my-toggle" class="toggle-checkbox">
-    <label for="my-toggle" class="toggle-label"></label>
+    </div>
+</header>
+
+<div class="container">
+    <div id="side">
+        <aside>
+            <button class="filter-btn"> No Filters Selected</button>
+            <div class="matches">
+                <h2>Matches</h2>
+                <div class="match"> Restaurant <br> <span>Cuisine</span></div>
+                <div class="match"> Restaurant <br> <span>Cuisine</span></div>
+                <div class="match"> Restaurant <br> <span>Cuisine</span></div>
+                <div class="match"> Restaurant <br> <span>Cuisine</span></div>
+            </div>
+        </aside>
+    </div>
+    <main>
+        <div id="map"></div>
+    </main>
 </div>
 
-<script>
-    const toggleCheckbox = document.getElementById('my-toggle');
-
-    toggleCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            console.log("Toggle is ON");
-        } else {
-            console.log("Toggle is OFF");
-        }
-    });
-</script>
-
+<script src="../js/map.js"></script>
 </body>
 </html>

@@ -155,3 +155,20 @@ aside {
     transform: translateX(26px);
 }
 
+.logo {
+    display: flex;
+    align-items: center; /* Align logo and text horizontally */
+}
+
+.logo img {
+    height: 50px; /* Adjust logo size */
+    width: auto;
+    margin-right: 10px; /* Space between logo and text */
+}
+
+.website-name {
+    font-size: 24px; /* Adjust text size */
+    font-weight: bold;
+    color: white; /* Matches header text color */
+    white-space: nowrap; /* Prevents text wrapping */
+}
