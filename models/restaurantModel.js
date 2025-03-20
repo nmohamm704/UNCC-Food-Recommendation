@@ -8,7 +8,8 @@ const restaurantSchema = new mongoose.Schema({
         lng: { type: Number, required: true }
     },
     description: { type: String, required: true },
-    categories: [{ type: String, enum: ['Halal', 'Kosher', 'Vegan', 'Vegetarian', 'Gluten-Free', 'Dairy-Free', 'Nut-Free', 'Pescetarian'] }],
+    categories: [{ type: String, required: true,
+                enum: ['Halal', 'Kosher', 'Vegan', 'Vegetarian', 'Gluten-Free', 'Dairy-Free', 'Nut-Free', 'Pescetarian'] }],
     cuisine: { type: String, required: true },
     operatingHours: {
         monday: { type: String, required: true },
