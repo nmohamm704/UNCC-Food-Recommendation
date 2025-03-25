@@ -128,3 +128,7 @@ aside {
     transition: 0.3s;
 }
 
+.fav-black {
+    width: 24px;  /* Adjust the width as needed */
+    height: auto; /* Maintains aspect ratio */
+}
