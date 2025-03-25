@@ -1,13 +1,19 @@
-const toggleCheckbox = document.getElementById('my-toggle');
+document.addEventListener("DOMContentLoaded", function () {
+    const settingsIcon = document.getElementById("settings-icon");
+    const dropdownMenu = document.getElementById("dropdown-menu");
 
-toggleCheckbox.addEventListener('change', function() {
-    if (this.checked) {
-        document.body.style.backgroundColor = "black";
-        document.body.style.color = "white";
-        console.log("Dark Mode ON");
-    } else {
-        document.body.style.backgroundColor = "white";
-        document.body.style.color = "black";
-        console.log("Light Mode ON");
+    if (settingsIcon && dropdownMenu) {
+        settingsIcon.addEventListener("click", function (event) {
+            dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+            event.stopPropagation(); // Prevents click from closing immediately
+        });
+
+        document.addEventListener("click", function () {
+            dropdownMenu.style.display = "none"; // Close if clicked outside
+        });
+
+        dropdownMenu.addEventListener("click", function (event) {
+            event.stopPropagation(); // Keep open when clicking inside
+        });
     }
 });

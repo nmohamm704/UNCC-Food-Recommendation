@@ -37,15 +37,12 @@ header {
     margin-left: 1rem;
     margin-right: 1rem;
     margin-bottom: 1rem;
+    display: flex;
 
 }
 
-.profile-img {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
 
-}
+
 
 body {
 
@@ -77,6 +74,7 @@ aside {
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     background-color: var(--white-color);
+    z-index: 1;
 }
 
 
@@ -157,13 +155,77 @@ aside {
 
 .logo {
     display: flex;
-    align-items: center; /* Align logo and text horizontally */
+    align-items: center;
+}
+
+.search-bar {
+    display: flex;
+
+}
+
+#group {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Align all items vertically */
+    gap: 15px;
+}
+.toggle-container{
+    display: flex;
+}
+
+.icons{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.settings-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    min-width: 150px;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    transition: background 0.3s;
+}
+
+.dropdown-menu a:hover {
+    background: #f0f0f0;
+}
+
+
+.profile-img{
+    display: flex;
+}
+
+
+.profile-img img {
+    width: 32px; /* Adjust size */
+    height: 32px;
+    border-radius: 50%; /* Makes it circular */
 }
 
 .logo img {
     height: 50px; /* Adjust logo size */
     width: auto;
-    margin-right: 10px; /* Space between logo and text */
+    margin-right: 10px;
+    /* Space between logo and text */
 }
 
 .website-name {
