@@ -15,9 +15,60 @@
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>
     <style>
-        /* Existing styles here */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #4da6ff;
+            padding: 10px 20px;
+            color: white;
+        }
+        .logo img {
+            height: 75px;
+        }
 
-        /* Profile Section */
+        .icons {
+            display: flex;
+            align-items: center;
+        }
+        .icons button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .icons img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+
+
+        .filter-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #e0e0e0;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .matches h2 {
+            margin-bottom: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
         .profile-container {
             max-width: 800px;
             margin: 20px auto;
@@ -85,10 +136,6 @@
         <span class="website-name">FoodMatch</span>
     </div>
 
-    <div class="search-bar">
-        <input type="text" placeholder="Search">
-        <button> search</button>
-    </div>
 
     <div id="group">
         <div class="toggle-container">
