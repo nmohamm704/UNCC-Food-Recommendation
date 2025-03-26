@@ -1,5 +1,11 @@
-# Ignore node_modules folder
+# Node modules
 node_modules/
 
-# Ignore IntelliJ IDEA files
+# IntelliJ IDEA config
 .idea/
+
+# Environment variable file
+.env
+
+# macOS Finder metadata
+.DS_Store
