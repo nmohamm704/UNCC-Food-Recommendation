@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
+    name: {type: String, required: true},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    image: { type: String, required: true },
-    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant', required: true }]
+    profileImage: { type: String, required: true },
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant'}]
 });
 
 // Password Hashing Before Saving

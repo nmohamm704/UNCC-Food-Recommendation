@@ -6,12 +6,22 @@ const JWT_SECRET = '1234';
 // Register User
 exports.register = async (req, res) => {
     try {
-        const { email, password, image } = req.body;
-        const user = new User({ email, password, image });
-        await user.save();
-        res.status(201).json({ message: 'User registered successfully!' });
+        const { name, email, password } = req.body;
+        const profileImage = req.file ? `/uploads/profileImages/${req.file.filename}` : null;
+
+        // Create new user
+        const newUser = new User({
+            name,
+            email: email.toLowerCase(),
+            password,
+            profileImage
+        });
+
+        await newUser.save();
+
+        res.status(201).json({ message: "User registered successfully!", user: newUser });
     } catch (error) {
-        res.status(500).json({ message: 'Registration failed', error });
+        res.status(500).json({ message: "Error signing up", error });
     }
 };
 
@@ -19,7 +29,8 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
+
+        const user = await User.findOne({ email: email.toLowerCase() });
 
         if (!user || !(await user.comparePassword(password))) {
             return res.status(401).json({ message: 'Invalid credentials' });
@@ -30,6 +41,33 @@ exports.login = async (req, res) => {
         res.json({ message: 'Logged in successfully', token });
     } catch (error) {
         res.status(500).json({ message: 'Login failed', error });
+    }
+};
+
+// Update User
+exports.update = async (req, res) => {
+    try {
+        const userId = req.user.userId; // Extract from token
+        const { name, email, password } = req.body;
+        const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
+
+        // Find the user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Update only the provided fields
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (password) user.password = password;
+        if (profileImage) user.profileImage = profileImage;
+
+        await user.save();
+
+        res.json({ message: "Profile updated successfully", user });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating profile", error });
     }
 };
 
