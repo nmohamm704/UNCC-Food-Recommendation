@@ -18,15 +18,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Favorite heart toggle
-    const hearts = document.querySelectorAll(".fav-black");
+    // Favorite heart toggle (Handles both black and full hearts)
+    const hearts = document.querySelectorAll(".fav-black, .fav-full");
 
     hearts.forEach(heart => {
         heart.addEventListener("click", function () {
             if (heart.getAttribute("src").includes("fav_black.png")) {
-                heart.setAttribute("src", "../images/fav_full.png");
-            } else {
-                heart.setAttribute("src", "../images/fav_black.png");
+                heart.setAttribute("src", "../images/fav_full.png"); // Change black heart to full heart
+            } else if (heart.getAttribute("src").includes("fav_full.png")) {
+                heart.setAttribute("src", "../images/fav_black.png"); // Change full heart to empty heart
+            } else if (heart.getAttribute("src").includes("fav_black.png")) {
+                heart.setAttribute("src", "../images/fav_full.png"); // Change empty heart back to full heart
             }
         });
     });
