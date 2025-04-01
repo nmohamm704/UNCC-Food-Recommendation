@@ -1,19 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Toggle settings dropdown
     const settingsIcon = document.getElementById("settings-icon");
     const dropdownMenu = document.getElementById("dropdown-menu");
 
     if (settingsIcon && dropdownMenu) {
         settingsIcon.addEventListener("click", function (event) {
             dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
-            event.stopPropagation(); // Prevents click from closing immediately
+            event.stopPropagation();
         });
 
         document.addEventListener("click", function () {
-            dropdownMenu.style.display = "none"; // Close if clicked outside
+            dropdownMenu.style.display = "none";
         });
 
         dropdownMenu.addEventListener("click", function (event) {
-            event.stopPropagation(); // Keep open when clicking inside
+            event.stopPropagation();
         });
     }
+
+    // Favorite heart toggle
+    const hearts = document.querySelectorAll(".fav-black");
+
+    hearts.forEach(heart => {
+        heart.addEventListener("click", function () {
+            if (heart.getAttribute("src").includes("fav_black.png")) {
+                heart.setAttribute("src", "../images/fav_full.png");
+            } else {
+                heart.setAttribute("src", "../images/fav_black.png");
+            }
+        });
+    });
 });
