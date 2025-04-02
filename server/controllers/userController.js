@@ -9,6 +9,8 @@ exports.register = async (req, res) => {
         const { name, email, password } = req.body;
         const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
 
+        console.log(name, email, password, profileImage);
+
         // Create new user
         const newUser = new User({
             name,
