@@ -25,11 +25,28 @@ document.addEventListener("DOMContentLoaded", function () {
         heart.addEventListener("click", function () {
             if (heart.getAttribute("src").includes("fav_black.png")) {
                 heart.setAttribute("src", "../images/fav_full.png"); // Change black heart to full heart
-            } else if (heart.getAttribute("src").includes("fav_full.png")) {
-                heart.setAttribute("src", "../images/fav_black.png"); // Change full heart to empty heart
-            } else if (heart.getAttribute("src").includes("fav_black.png")) {
-                heart.setAttribute("src", "../images/fav_full.png"); // Change empty heart back to full heart
+            } else {
+                heart.setAttribute("src", "../images/fav_black.png"); // Change full heart to black heart
             }
         });
     });
+
+    // Filter Dropdown Toggle
+    const filterBtn = document.querySelector(".filter-btn");
+    const filterDropdown = document.getElementById("filterDropdown");
+
+    if (filterBtn && filterDropdown) {
+        filterBtn.addEventListener("click", function (event) {
+            filterDropdown.style.display = filterDropdown.style.display === "block" ? "none" : "block";
+            event.stopPropagation(); // Prevents closing when clicking the button
+        });
+
+        document.addEventListener("click", function () {
+            filterDropdown.style.display = "none";
+        });
+
+        filterDropdown.addEventListener("click", function (event) {
+            event.stopPropagation(); // Prevents dropdown from closing when clicking inside
+        });
+    }
 });

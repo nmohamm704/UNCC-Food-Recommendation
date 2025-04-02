@@ -126,7 +126,16 @@
 <div class="container">
     <div id="side">
         <aside>
-            <button class="filter-btn"> No Filters Selected</button>
+            <button class="filter-btn" onclick="toggleDropdown()">Filters</button>
+            <div class="filter-dropdown" id="filterDropdown">
+                <label><input type="checkbox" value="vegan"> Vegan</label>
+                <label><input type="checkbox" value="vegetarian"> Vegetarian</label>
+                <label><input type="checkbox" value="halal"> Halal</label>
+                <label><input type="checkbox" value="dairy-free"> Dairy Free</label>
+                <label><input type="checkbox" value="gluten-free"> Gluten Free</label>
+                <label><input type="checkbox" value="kosher"> Kosher</label>
+                <label><input type="checkbox" value="nut-free"> Nut Free</label>
+            </div>
             <div class="matches">
                 <h2>Matches</h2>
 
