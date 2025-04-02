@@ -7,7 +7,7 @@ const JWT_SECRET = '1234';
 exports.register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        const profileImage = req.file ? `/uploads/profileImages/${req.file.filename}` : null;
+        const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
 
         // Create new user
         const newUser = new User({
