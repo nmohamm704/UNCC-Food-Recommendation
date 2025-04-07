@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>FoodMatch - Profile</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/map.css">
-    <link rel="stylesheet" href="css/navbar.css">
-    <link rel="stylesheet" href="css/fav.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/map.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/fav.css" />
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          crossorigin=""
+    />
+    <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+            crossorigin=""
+    ></script>
     <style>
         body {
             margin: 0;
@@ -50,24 +54,9 @@
             margin-right: 10px;
         }
 
-
-
-        .filter-btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            background: #e0e0e0;
-            font-size: 16px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-        .matches h2 {
-            margin-bottom: 10px;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
+        .profile-img img {
+            border-radius: 50%;
+            object-fit: cover;
         }
         .profile-container {
             max-width: 800px;
@@ -77,36 +66,24 @@
             border-radius: 8px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
-
         .profile-header {
             display: flex;
             align-items: center;
             gap: 15px;
             margin-bottom: 20px;
         }
-
-        .profile-img img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
         .profile-info {
             display: flex;
             flex-direction: column;
         }
-
         .profile-info h1 {
             font-size: 24px;
             margin: 0;
         }
-
         .profile-info p {
             font-size: 16px;
             color: #555;
         }
-
         .edit-profile-form input {
             width: 100%;
             padding: 10px;
@@ -114,7 +91,6 @@
             border: 1px solid #ddd;
             border-radius: 5px;
         }
-
         .edit-profile-form button {
             background-color: #4da6ff;
             color: white;
@@ -123,7 +99,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
         .edit-profile-form button:hover {
             background-color: #006bb3;
         }
@@ -131,27 +106,35 @@
 </head>
 <body>
 <header>
-    <div class="logo">
-        <img src="images/Logo.png" alt="FoodMatch Logo">
+    <a href="home.html" class="logo" style="text-decoration: none; color: inherit;">
+        <img src="images/Logo.png" alt="FoodMatch Logo" />
         <span class="website-name">FoodMatch</span>
-    </div>
-
+    </a>
 
     <div id="group">
         <div class="toggle-container">
-            <input type="checkbox" id="my-toggle" class="toggle-checkbox">
+            <input type="checkbox" id="my-toggle" class="toggle-checkbox" />
             <label for="my-toggle" class="toggle-label"></label>
         </div>
 
         <div class="icons">
-            <a href= "favorites.html">
-                <img src="images/fav_emp.png" alt="fav empty">
+            <a href="favorites.html">
+                <img src="images/fav_emp.png" alt="fav empty" />
             </a>
-            <img src="images/settings.png" alt="settings">
-        </div>
+            <div class="settings-container">
+                <img src="images/settings.png" alt="settings" id="settings-icon" />
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <a href="profile.html">Profile</a>
+                    <a href="account.html">Account Settings</a>
+                    <a href="logout.html">Logout</a>
+                </div>
+            </div>
 
+        <!-- top-right profile picture (blank src), loaded by loadUserProfile.js -->
         <div class="profile-img">
-            <img src="images/person%20pic.jpg" alt="pfp">
+            <img id="profile-picture-nav" src=""
+                 alt="Top Right Profile"
+                 style="visibility: visible; width: 40px; height: 40px;" />
         </div>
     </div>
 </header>
@@ -159,25 +142,36 @@
 <main>
     <div class="profile-container">
         <div class="profile-header">
+            <!-- center profile image, loaded by profile.js -->
             <div class="profile-img">
-                <img src="images/person%20pic.jpg" alt="User Profile Picture">
+                <img id="profile-image"
+                     src=""
+                     alt="Center Profile"
+                     style="visibility: visible; width: 100px; height: 100px;" />
             </div>
             <div class="profile-info">
-                <h1>John Doe</h1>
-                <p>Email: johndoe@example.com</p>
-                <p>Password: **********</p>
+                <h1 id="user-name"></h1>
+                <p id="user-email"></p>
+                <p id="user-password"></p>
             </div>
         </div>
 
-        <form class="edit-profile-form" action="/update-profile" method="POST">
+        <form class="edit-profile-form" id="edit-profile-form">
             <h2>Edit Profile</h2>
-            <input type="text" name="name" placeholder="Full Name" value="John Doe" required>
-            <input type="email" name="email" placeholder="Email Address" value="johndoe@example.com" required>
-            <input type="password" name="password" placeholder="New Password" required>
+            <input type="text" id="edit-name" name="name" placeholder="Full Name" required />
+            <input type="email" id="edit-email" name="email" placeholder="Email Address" required />
+            <input type="password" id="edit-password" name="password" placeholder="New Password" required />
+            <label for="edit-profile-image">New Profile Picture:</label>
+            <input type="file" id="edit-profile-image" name="profileImage" accept="image/*" />
             <button type="submit">Save Changes</button>
         </form>
     </div>
 </main>
+
+<script src="js/loadUserProfile.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/main.js"></script>
+<script src="js/updateProfile.js"></script>
 
 </body>
 </html>
