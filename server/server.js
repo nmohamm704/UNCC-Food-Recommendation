@@ -23,8 +23,5 @@ connectDB();
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/users', userRoutes);
 
-// Start Server
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+module.exports = app;
+
