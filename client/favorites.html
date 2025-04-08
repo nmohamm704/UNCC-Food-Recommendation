@@ -128,83 +128,9 @@
 </div>
 
 <script src="js/map.js"></script>
-<script src="js/main.js"></script>
 <script src="js/loadUserProfile.js"></script>
+<script src="js/favorites.js"></script>
+<script src="js/main.js"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        const token = localStorage.getItem("token");
-        const matchesContainer = document.querySelector(".matches");
-
-        if (!token || !matchesContainer) return;
-
-        try {
-            const response = await fetch("http://localhost:3000/api/users/favorites", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            const favorites = await response.json();
-
-            console.log("Favorites Data:", favorites)
-
-            if (!Array.isArray(favorites)) {
-                console.error("Unexpected response format:", favorites);
-                return;
-            }
-
-            if (favorites.length === 0) {
-                matchesContainer.innerHTML += "<p>No favorites found.</p>";
-                return;
-            }
-
-            favorites.forEach((restaurant) => {
-                const div = document.createElement("div");
-                div.classList.add("match");
-                div.innerHTML = `
-                    <img
-                        src="images/fav_full.png"
-                        alt="fav full"
-                        class="fav-full"
-                        style="cursor: pointer;"
-                        data-id="${restaurant._id}"
-                    />
-                    ${restaurant.name}<br /><span>${restaurant.cuisine}</span>
-                `;
-
-                const heart = div.querySelector("img");
-                heart.addEventListener("click", async () => {
-                    try {
-                        const res = await fetch(`http://localhost:3000/api/users/favorites/${restaurant._id}`, {
-                            method: "POST",
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                        });
-
-                        const result = await res.json();
-                        if (res.ok && !result.favorited) {
-                            div.remove(); // remove from the UI
-                        } else {
-                            alert("Could not unfavorite. Try again.");
-                        }
-                    } catch (err) {
-                        console.error("Error unfavoriting:", err);
-                    }
-                });
-
-                matchesContainer.appendChild(div);
-            });
-        } catch (err) {
-            console.error("Failed to load favorites:", err);
-        }
-    });
-
-    document.getElementById("settings-icon").addEventListener("click", () => {
-        const dropdown = document.getElementById("dropdown-menu");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-    });
-</script>
 </body>
 </html>
