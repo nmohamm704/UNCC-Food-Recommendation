@@ -105,14 +105,14 @@
                 <img src="images/settings.png" alt="Settings" id="settings-icon">
                 <div class="dropdown-menu" id="dropdown-menu">
                     <a href="profile.html">Profile</a>
-                    <a href="account.html">Account Settings</a>
-                    <a href="logout.html">Logout</a>
+                    <a href="profile.html">Account Settings</a>
+                    <a href="login.html">Logout</a>
                 </div>
             </div>
         </div>
 
         <div class="profile-img">
-            <img id="profile-picture-nav" src="images/person%20pic.jpg" alt="User Profile Picture" style="visibility: visible;" />
+            <img id="profile-picture-nav" src="" alt="User Profile Picture" style="visibility: visible;" />
         </div>
     </div>
 
@@ -121,13 +121,21 @@
 <div class="container">
     <div id="side">
         <aside>
-            <button class="filter-btn"> No Filters Selected</button>
+            <button class="filter-btn" onclick="toggleDropdown()">Filters</button>
+            <div class="filter-dropdown" id="filterDropdown">
+                <label><input type="checkbox" value="vegan"> Vegan</label>
+                <label><input type="checkbox" value="vegetarian"> Vegetarian</label>
+                <label><input type="checkbox" value="halal"> Halal</label>
+                <label><input type="checkbox" value="dairy-free"> Dairy Free</label>
+                <label><input type="checkbox" value="gluten-free"> Gluten Free</label>
+                <label><input type="checkbox" value="kosher"> Kosher</label>
+                <label><input type="checkbox" value="nut-free"> Nut Free</label>
+            </div>
             <div class="matches">
                 <h2>Matches</h2>
             </div>
         </aside>
     </div>
-
     <main>
         <div id="map"></div>
     </main>

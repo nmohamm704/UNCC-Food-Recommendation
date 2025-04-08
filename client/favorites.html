@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodMatch</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/map.css" />
-    <link rel="stylesheet" href="css/navbar.css" />
-    <link rel="stylesheet" href="css/fav.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/map.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/fav.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
@@ -78,37 +78,37 @@
 <body>
 <header>
     <a href="home.html" class="logo" style="text-decoration: none; color: inherit;">
-        <img src="images/Logo.png" alt="FoodMatch Logo" />
+        <img src="images/Logo.png" alt="FoodMatch Logo">
         <span class="website-name">FoodMatch</span>
     </a>
 
     <div class="search-bar">
-        <input type="text" placeholder="Search" />
+        <input type="text" placeholder="Search">
         <button> search</button>
     </div>
 
     <div id="group">
         <div class="toggle-container">
-            <input type="checkbox" id="my-toggle" class="toggle-checkbox" />
+            <input type="checkbox" id="my-toggle" class="toggle-checkbox">
             <label for="my-toggle" class="toggle-label"></label>
         </div>
 
         <div class="icons">
-            <a href="favorites.html">
-                <img src="images/fav_emp.png" alt="fav empty" />
+            <a href= "favorites.html">
+                <img src="images/fav_emp.png" alt="fav empty">
             </a>
             <div class="settings-container">
-                <img src="images/settings.png" alt="settings" id="settings-icon" />
+                <img src="images/settings.png" alt="Settings" id="settings-icon">
                 <div class="dropdown-menu" id="dropdown-menu">
                     <a href="profile.html">Profile</a>
-                    <a href="account.html">Account Settings</a>
-                    <a href="logout.html">Logout</a>
+                    <a href="profile.html">Account Settings</a>
+                    <a href="login.html">Logout</a>
                 </div>
             </div>
         </div>
 
         <div class="profile-img">
-            <img id="profile-picture-nav" src="images/person%20pic.jpg" alt="pfp" style="visibility: visible;" />
+            <img id="profile-picture-nav" src="" alt="User Profile Picture" style="visibility: visible;" />
         </div>
     </div>
 </header>
@@ -116,7 +116,16 @@
 <div class="container">
     <div id="side">
         <aside>
-            <button class="filter-btn"> No Filters Selected</button>
+            <button class="filter-btn" onclick="toggleDropdown()">Filters</button>
+            <div class="filter-dropdown" id="filterDropdown">
+                <label><input type="checkbox" value="vegan"> Vegan</label>
+                <label><input type="checkbox" value="vegetarian"> Vegetarian</label>
+                <label><input type="checkbox" value="halal"> Halal</label>
+                <label><input type="checkbox" value="dairy-free"> Dairy Free</label>
+                <label><input type="checkbox" value="gluten-free"> Gluten Free</label>
+                <label><input type="checkbox" value="kosher"> Kosher</label>
+                <label><input type="checkbox" value="nut-free"> Nut Free</label>
+            </div>
             <div class="matches">
                 <h2>Favorites</h2>
             </div>
@@ -128,9 +137,9 @@
 </div>
 
 <script src="js/map.js"></script>
+<script src="js/main.js"></script>
 <script src="js/loadUserProfile.js"></script>
 <script src="js/favorites.js"></script>
-<script src="js/main.js"></script>
 
 </body>
 </html>
