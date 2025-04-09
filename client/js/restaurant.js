@@ -70,14 +70,28 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // On click, center the map and show a popup
             div.addEventListener("click", () => {
-                map.setView(
+                /*map.setView(
                     [restaurant.coordinates.lat, restaurant.coordinates.lng],
                     16
                 );
                 L.popup()
                     .setLatLng([restaurant.coordinates.lat, restaurant.coordinates.lng])
                     .setContent(`<strong>${restaurant.name}</strong><br>${restaurant.address}`)
-                    .openOn(map);
+                    .openOn(map);*/
+                const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
+
+                map.flyTo(latlng, 16, {
+                    animate: true,
+                    duration: 0.5 // in seconds (optional)
+                });
+
+                // Open popup right after fly completes
+                setTimeout(() => {
+                    L.popup()
+                        .setLatLng(latlng)
+                        .setContent(`<strong>${restaurant.name}</strong><br>${restaurant.address}`)
+                        .openOn(map);
+                }, 500); // matches the duration of the flyTo animation
             });
 
             matchesContainer.appendChild(div);
