@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Center image (if data.profileImage is the same or separate from top-right)
         if (data.profileImage) {
-            const centerPic = document.getElementById("profile-image");
+            const centerPic = document.getElementById("profile-picture-main");
             centerPic.src = `http://localhost:3000${data.profileImage}`;
             centerPic.style.visibility = "visible";
         }
