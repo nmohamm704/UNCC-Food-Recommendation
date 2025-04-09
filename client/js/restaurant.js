@@ -70,14 +70,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // On click, center the map and show a popup
             div.addEventListener("click", () => {
-                /*map.setView(
-                    [restaurant.coordinates.lat, restaurant.coordinates.lng],
-                    16
-                );
-                L.popup()
-                    .setLatLng([restaurant.coordinates.lat, restaurant.coordinates.lng])
-                    .setContent(`<strong>${restaurant.name}</strong><br>${restaurant.address}`)
-                    .openOn(map);*/
                 const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
 
                 map.flyTo(latlng, 16, {
