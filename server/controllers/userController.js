@@ -6,7 +6,9 @@ const JWT_SECRET = '1234';
 // Register User
 exports.register = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const name = req.body.name?.trim();
+        const email = req.body.email?.trim().toLowerCase();
+        const password = req.body.password?.trim();
         const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
 
         console.log(name, email, password, profileImage);
@@ -14,7 +16,7 @@ exports.register = async (req, res) => {
         // Create new user
         const newUser = new User({
             name,
-            email: email.toLowerCase(),
+            email: email,
             password,
             profileImage
         });
@@ -30,9 +32,11 @@ exports.register = async (req, res) => {
 // Login User
 exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const email = req.body.email?.trim().toLowerCase();
+        const password = req.body.password?.trim();
 
-        const user = await User.findOne({ email: email.toLowerCase() });
+
+        const user = await User.findOne({ email: email });
 
         if (!user || !(await user.comparePassword(password))) {
             return res.status(401).json({ message: 'Invalid credentials' });
@@ -50,7 +54,9 @@ exports.login = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         const userId = req.user.userId; // Extract from token
-        const { name, email, password } = req.body;
+        const name = req.body.name?.trim();
+        const email = req.body.email?.trim().toLowerCase();
+        const password = req.body.password?.trim();
         const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
 
         // Find the user
