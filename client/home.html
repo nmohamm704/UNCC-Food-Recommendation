@@ -105,8 +105,8 @@
                 <img src="images/settings.png" alt="Settings" id="settings-icon">
                 <div class="dropdown-menu" id="dropdown-menu">
                     <div class="dropdown-user-info">
-                        <img src="images/person%20pic.jpg" alt="Profile" class="dropdown-profile-pic" />
-                        <div class="dropdown-username">Name</div>
+                        <img id="profile-picture-settings" src="" alt="User Profile Picture" class="dropdown-profile-pic" style="visibility: visible;" />
+                        <div class="dropdown-username" id="dropdown-username">Name</div>
                     </div>
                     <hr class="dropdown-divider" />
                     <a href="profile.html" class="dropdown-item">
@@ -153,6 +153,17 @@
     <main>
         <div id="map"></div>
     </main>
+    <div id="restaurant-popup" class="restaurant-popup" style="display: none;">
+        <button id="popup-close" class="popup-close">X</button>
+        <div class="restaurant-details">
+            <h2 id="popup-restaurant-name">Restaurant Name</h2>
+            <p id="popup-restaurant-address">Address: </p>
+            <p id="popup-restaurant-cuisine">Cuisine: </p>
+            <p id="popup-restaurant-description">Description: </p>
+            <p id="popup-restaurant-hours">Hours: </p>
+            <p id="popup-restaurant-contact">Contact: </p>
+        </div>
+    </div>
 </div>
 
 <script src="js/map.js"></script>
