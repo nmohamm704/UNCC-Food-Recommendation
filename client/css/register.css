@@ -57,3 +57,11 @@
 .register-form button:hover {
     background-color: #000;
 }
+
+.login {
+    font-size: 14px;
+    text-align: left;
+    margin-top: 0.5rem;
+    color: #012;
+    text-decoration: underline;
+}
