@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         restaurants.forEach((restaurant) => {
-            // Create match card in the sidebar
+            // Create a match card in the sidebar for each restaurant
             const div = document.createElement("div");
             div.classList.add("match");
             div.innerHTML = `
@@ -36,11 +36,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const heart = div.querySelector(".fav-black");
 
-            // Check if the restaurant is already favorited (you could track this state based on the user's favorites)
-            heart.src = restaurant.favorited ? "images/fav_full.png" : "images/fav_black.png"; // Change the heart icon based on favorite status
+            // Set heart icon based on favorite status
+            heart.src = restaurant.favorited ? "images/fav_full.png" : "images/fav_black.png";
 
-            // On heart click, toggle favorite
-            heart.addEventListener("click", async () => {
+            // On heart click, toggle favorite state
+            heart.addEventListener("click", async (e) => {
+                e.stopPropagation(); // prevent the card click from firing
                 try {
                     const res = await fetch(`http://localhost:3000/api/users/favorites/${restaurant._id}`, {
                         method: "POST",
@@ -51,44 +52,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     const result = await res.json();
                     if (res.ok) {
-                        // Toggle the heart icon
                         heart.src = result.favorited ? "images/fav_full.png" : "images/fav_black.png";
-
-                        // Optionally update the favorites list in the UI
-                        if (result.favorited) {
-                            // Add to favorites page or trigger re-fetch of the favorites
-                        } else {
-                            // Remove from favorites page or trigger re-fetch of the favorites
-                        }
                     } else {
                         alert("Could not toggle favorite. Try again.");
                     }
                 } catch (err) {
-                    console.error("Error favoriting/unfavoriting:", err);
+                    console.error("Error toggling favorite:", err);
                 }
             });
 
-            // On click, center the map and show a popup
+            // On click, center the map and show both the map popup and the sidebar detailed popup
             div.addEventListener("click", () => {
                 const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
 
+                // Fly the map to the restaurant location
                 map.flyTo(latlng, 16, {
                     animate: true,
                     duration: 0.5 // in seconds (optional)
                 });
 
-                // Open popup right after fly completes
+                // Open a small Leaflet popup showing name and address (over the map)
                 setTimeout(() => {
                     L.popup()
                         .setLatLng(latlng)
                         .setContent(`<strong>${restaurant.name}</strong><br>${restaurant.address}`)
                         .openOn(map);
                 }, 500); // matches the duration of the flyTo animation
+
+                // Additionally, show the sidebar popup with detailed info
+                showSidebarPopup(restaurant);
             });
 
             matchesContainer.appendChild(div);
 
-            // Add a marker on the map if not already added
+            // Add a marker on the map for each restaurant if not already added
             if (!markers[restaurant._id]) {
                 const marker = L.marker([
                     restaurant.coordinates.lat,
@@ -97,10 +94,44 @@ document.addEventListener("DOMContentLoaded", async () => {
                     .addTo(map)
                     .bindPopup(`<strong>${restaurant.name}</strong><br>${restaurant.address}`);
 
-                markers[restaurant._id] = marker; // Store the marker by restaurant ID
+                markers[restaurant._id] = marker;
             }
         });
     } catch (err) {
         console.error("Failed to load restaurants:", err);
     }
 });
+
+// Function to show the sidebar popup with detailed restaurant info
+function showSidebarPopup(restaurant) {
+    // Get sidebar popup elements by their IDs (make sure these IDs exist in your HTML)
+    const sidebarPopup = document.getElementById("restaurant-sidebar-popup");
+    const closeBtn = document.getElementById("sidebar-popup-close");
+    const nameElem = document.getElementById("sidebar-popup-restaurant-name");
+    const addressElem = document.getElementById("sidebar-popup-restaurant-address");
+    const cuisineElem = document.getElementById("sidebar-popup-restaurant-cuisine");
+    const descriptionElem = document.getElementById("sidebar-popup-restaurant-description");
+    const hoursElem = document.getElementById("sidebar-popup-restaurant-hours");
+    const contactElem = document.getElementById("sidebar-popup-restaurant-contact");
+
+    // Update the popup’s content with restaurant details
+    nameElem.textContent = restaurant.name;
+    addressElem.textContent = `Address: ${restaurant.address}`;
+    cuisineElem.textContent = `Cuisine: ${restaurant.cuisine}`;
+    descriptionElem.textContent = `Description: ${restaurant.description}`;
+
+    // Format operating hours (customize as needed)
+    const hours = restaurant.operatingHours;
+    hoursElem.textContent = `Hours: Mon: ${hours.monday}, Tue: ${hours.tuesday}, Wed: ${hours.wednesday}, Thu: ${hours.thursday}, Fri: ${hours.friday}, Sat: ${hours.saturday}, Sun: ${hours.sunday}`;
+
+    // Combine contact details (e.g., phone and website)
+    contactElem.textContent = `Contact: ${restaurant.phone} | ${restaurant.website}`;
+
+    // Show the sidebar popup by setting its display to block
+    sidebarPopup.style.display = "block";
+
+    // Attach an event handler to the close button to hide the popup when clicked
+    closeBtn.onclick = function() {
+        sidebarPopup.style.display = "none";
+    };
+}
