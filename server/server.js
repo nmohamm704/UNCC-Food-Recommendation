@@ -1,9 +1,10 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const express = require('express');
 const restaurantRoutes = require('./routes/restaurantRoutes');
 const userRoutes = require('./routes/userRoutes');
 const connectDB = require('./config/database');
 const morgan = require('morgan');
-const path = require('path');
 const cors = require('cors');
 
 

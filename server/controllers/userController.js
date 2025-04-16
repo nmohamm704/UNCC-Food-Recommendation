@@ -1,7 +1,7 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = '1234';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Register User
 exports.register = async (req, res) => {
@@ -10,8 +10,6 @@ exports.register = async (req, res) => {
         const email = req.body.email?.trim().toLowerCase();
         const password = req.body.password?.trim();
         const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
-
-        console.log(name, email, password, profileImage);
 
         // Create new user
         const newUser = new User({
@@ -118,6 +116,26 @@ exports.getFavoriteRestaurants = async (req, res) => {
         res.status(200).json(user.favorites);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching favorite restaurants', error: error.message });
+    }
+};
+
+//Get User Profile
+exports.getProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({
+            name: user.name,
+            email: user.email,
+            profileImage: user.profileImage
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch profile', error });
     }
 };
 
