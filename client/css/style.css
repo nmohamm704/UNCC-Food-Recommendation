@@ -259,40 +259,74 @@ aside {
 }
 
 /* Popup container styles */
-.restaurant-popup {
+
+.floating-box {
     position: absolute;
-    top: 80px;         /* Adjust as needed to align with the sidebar */
-    left: 20px;        /* Adjust to position the popup relative to the sidebar */
-    width: 320px;      /* Set a suitable width for the popup */
+    top: 20px;
+    left: 350px; /* Adjust so it sits next to your sidebar */
+    width: 340px; /* Adjust as needed */
+    min-height: 300px; /* or 100% if you want it as tall as the sidebar */
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 20px;
-    z-index: 1000;     /* Ensure it appears above other elements */
+    z-index: 1000; /* Keep it above the map */
+    overflow-y: auto; /* If content gets too long, scroll */
 }
 
-/* Popup close button styles */
-.popup-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-/* Restaurant details within the popup */
-.restaurant-details h2 {
+.floating-box h2 {
     margin-top: 0;
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 10px;
 }
 
-.restaurant-details p {
-    margin: 5px 0;
-    font-size: 14px;
-    color: #555;
+.popup-icon {
+    width: 20px;          /* Adjust width as needed */
+    height: 20px;         /* Adjust height as needed */
+    vertical-align: text-bottom;
+    margin-right: 5px;
+}
+
+.hours-container {
+    display: flex;
+    align-items: flex-start;  /* Align items to the top so the icon stays with Monday */
+}
+
+.hours-lines {
+    margin-left: 5px;  /* Adjust margin so Tuesday through Sunday align with Monday's text */
+}
+
+.hours-lines div {
+    line-height: 1.4;  /* Optional: adjust line height as needed */
+}
+
+.website-container {
+    display: flex;
+    align-items: flex-start;  /* Top aligns the icon with the first line of text */
+    flex-wrap: wrap;          /* Allows text to wrap if it’s too long */
+}
+
+.website-container .popup-icon {
+    flex: 0 0 auto;           /* Icon keeps its size */
+}
+
+.website-text {
+    margin-left: 5px;
+    flex: 1;                  /* Takes up remaining space */
+    display: block;           /* Makes link text a block so that on wrap, all lines start at the same left position */
+    word-break: break-all;    /* Ensures long links break as needed; you can also use 'break-word' */
+}
+
+/* Ensure the popup has proper spacing between sections */
+#restaurant-floating-box h2 {
+    margin-bottom: 20px; /* Space below the restaurant name */
+}
+
+#popup-restaurant-description {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#restaurant-floating-box p {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

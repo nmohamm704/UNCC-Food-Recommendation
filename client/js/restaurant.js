@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         restaurants.forEach((restaurant) => {
-            // Create a match card in the sidebar for each restaurant
+            // Create match card in the sidebar
             const div = document.createElement("div");
             div.classList.add("match");
             div.innerHTML = `
@@ -34,14 +34,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ${restaurant.name}<br /><span>${restaurant.cuisine}</span>
             `;
 
+            // Handle favorite (heart icon)
             const heart = div.querySelector(".fav-black");
-
-            // Set heart icon based on favorite status
             heart.src = restaurant.favorited ? "images/fav_full.png" : "images/fav_black.png";
 
-            // On heart click, toggle favorite state
             heart.addEventListener("click", async (e) => {
-                e.stopPropagation(); // prevent the card click from firing
+                e.stopPropagation(); // prevent the card click from triggering
                 try {
                     const res = await fetch(`http://localhost:3000/api/users/favorites/${restaurant._id}`, {
                         method: "POST",
@@ -61,39 +59,35 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             });
 
-            // On click, center the map and show both the map popup and the sidebar detailed popup
+            // On card click: fly the map, show Leaflet popup, plus our floating box
             div.addEventListener("click", () => {
                 const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
 
-                // Fly the map to the restaurant location
+                // Fly the map to the restaurant
                 map.flyTo(latlng, 16, {
                     animate: true,
-                    duration: 0.5 // in seconds (optional)
+                    duration: 0.5
                 });
 
-                // Open a small Leaflet popup showing name and address (over the map)
+                // Show the small Leaflet popup on the marker
                 setTimeout(() => {
                     L.popup()
                         .setLatLng(latlng)
                         .setContent(`<strong>${restaurant.name}</strong><br>${restaurant.address}`)
                         .openOn(map);
-                }, 500); // matches the duration of the flyTo animation
+                }, 500);
 
-                // Additionally, show the sidebar popup with detailed info
-                showSidebarPopup(restaurant);
+                // Also show the detailed floating box on top of the map
+                showFloatingBox(restaurant);
             });
 
             matchesContainer.appendChild(div);
 
-            // Add a marker on the map for each restaurant if not already added
+            // Add marker to the map if not already existing
             if (!markers[restaurant._id]) {
-                const marker = L.marker([
-                    restaurant.coordinates.lat,
-                    restaurant.coordinates.lng,
-                ])
+                const marker = L.marker([restaurant.coordinates.lat, restaurant.coordinates.lng])
                     .addTo(map)
                     .bindPopup(`<strong>${restaurant.name}</strong><br>${restaurant.address}`);
-
                 markers[restaurant._id] = marker;
             }
         });
@@ -102,36 +96,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Function to show the sidebar popup with detailed restaurant info
-function showSidebarPopup(restaurant) {
-    // Get sidebar popup elements by their IDs (make sure these IDs exist in your HTML)
-    const sidebarPopup = document.getElementById("restaurant-sidebar-popup");
-    const closeBtn = document.getElementById("sidebar-popup-close");
-    const nameElem = document.getElementById("sidebar-popup-restaurant-name");
-    const addressElem = document.getElementById("sidebar-popup-restaurant-address");
-    const cuisineElem = document.getElementById("sidebar-popup-restaurant-cuisine");
-    const descriptionElem = document.getElementById("sidebar-popup-restaurant-description");
-    const hoursElem = document.getElementById("sidebar-popup-restaurant-hours");
-    const contactElem = document.getElementById("sidebar-popup-restaurant-contact");
 
-    // Update the popup’s content with restaurant details
+function showFloatingBox(restaurant) {
+    // Grab the floating box elements
+    const floatingBox = document.getElementById("restaurant-floating-box");
+    const nameElem = document.getElementById("popup-restaurant-name");
+    const addressElem = document.getElementById("popup-restaurant-address");
+    const cuisineElem = document.getElementById("popup-restaurant-cuisine");
+    const descriptionElem = document.getElementById("popup-restaurant-description");
+    const hoursElem = document.getElementById("popup-restaurant-hours");
+    const phoneElem = document.getElementById("popup-restaurant-phone");
+    const websiteElem = document.getElementById("popup-restaurant-website");
+
+    // Fill in the data
     nameElem.textContent = restaurant.name;
-    addressElem.textContent = `Address: ${restaurant.address}`;
-    cuisineElem.textContent = `Cuisine: ${restaurant.cuisine}`;
-    descriptionElem.textContent = `Description: ${restaurant.description}`;
+    descriptionElem.textContent = `${restaurant.description}`;
+    addressElem.innerHTML = `<img src="images/location.png" alt="Address" class="popup-icon" /> ${restaurant.address}`;
+    cuisineElem.innerHTML = `<img src="images/food.png" alt="Cuisine" class="popup-icon" /> ${restaurant.cuisine}`;
 
-    // Format operating hours (customize as needed)
+    // Format operating hours
     const hours = restaurant.operatingHours;
-    hoursElem.textContent = `Hours: Mon: ${hours.monday}, Tue: ${hours.tuesday}, Wed: ${hours.wednesday}, Thu: ${hours.thursday}, Fri: ${hours.friday}, Sat: ${hours.saturday}, Sun: ${hours.sunday}`;
+    hoursElem.innerHTML = `
+  <div class="hours-container">
+    <img src="images/schedule.png" alt="Hours" class="popup-icon" />
+    <div class="hours-lines">
+      <div>Mon: ${hours.monday}</div>
+      <div>Tue: ${hours.tuesday}</div>
+      <div>Wed: ${hours.wednesday}</div>
+      <div>Thu: ${hours.thursday}</div>
+      <div>Fri: ${hours.friday}</div>
+      <div>Sat: ${hours.saturday}</div>
+      <div>Sun: ${hours.sunday}</div>
+    </div>
+  </div>
+`;
 
-    // Combine contact details (e.g., phone and website)
-    contactElem.textContent = `Contact: ${restaurant.phone} | ${restaurant.website}`;
+    // Contact details
+    phoneElem.innerHTML = `<img src="images/phone.png" alt="Phone" class="popup-icon" /> ${restaurant.phone}`;
 
-    // Show the sidebar popup by setting its display to block
-    sidebarPopup.style.display = "block";
-
-    // Attach an event handler to the close button to hide the popup when clicked
-    closeBtn.onclick = function() {
-        sidebarPopup.style.display = "none";
-    };
+    websiteElem.innerHTML = `
+  <div class="website-container">
+    <img src="images/web.png" alt="Website" class="popup-icon" />
+    <a href="${restaurant.website}" target="_blank" class="website-text">${restaurant.website}</a>
+  </div>
+`;
+    // Show the floating box
+    floatingBox.style.display = "block";
 }
