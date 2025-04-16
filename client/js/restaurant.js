@@ -1,6 +1,3 @@
-// Global variable to track which restaurant is currently open in the floating box
-let currentOpenRestaurantId = null;
-
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
     const matchesContainer = document.querySelector(".matches");
@@ -9,51 +6,78 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!token || !matchesContainer || !map) return;
 
+    // First, fetch the user's favorites so that we know which restaurant IDs are favorited
+    let userFavoriteIds = [];
+    try {
+        const favResponse = await fetch("http://localhost:3000/api/users/favorites", {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const favData = await favResponse.json();
+        if (Array.isArray(favData)) {
+            // Assumes each favorite has an _id property
+            userFavoriteIds = favData.map(fav => fav._id);
+        }
+    } catch (favErr) {
+        console.error("Failed to load user's favorites:", favErr);
+    }
+
+    // Now, fetch all restaurants
     try {
         const response = await fetch("http://localhost:3000/api/restaurants", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
         });
-
         const restaurants = await response.json();
 
         if (!Array.isArray(restaurants)) {
             console.error("Unexpected response format:", restaurants);
             return;
         }
-
         if (restaurants.length === 0) {
             matchesContainer.innerHTML += "<p>No matches found.</p>";
             return;
         }
 
         restaurants.forEach((restaurant) => {
-            // Create match card in the sidebar
+            // Create match card in the sidebar for each restaurant
             const div = document.createElement("div");
             div.classList.add("match");
             div.innerHTML = `
-                <img src="images/fav_black.png" alt="fav black" class="fav-black" />
-                ${restaurant.name}<br /><span>${restaurant.cuisine}</span>
+                <div class="restaurant-info" data-id="${restaurant._id}">
+                    <div class="restaurant-name">${restaurant.name}</div>
+                    <div class="restaurant-cuisine">${restaurant.cuisine}</div>
+                </div>
+                <img src="images/fav_black.png" alt="fav black" class="fav-black" style="cursor:pointer;" data-id="${restaurant._id}" />
             `;
 
-            // Handle favorite (heart icon)
+            // Handle favorite heart image based on whether the restaurant is in the user's favorites
             const heart = div.querySelector(".fav-black");
-            heart.src = restaurant.favorited ? "images/fav_full.png" : "images/fav_black.png";
+            const isFavorited = userFavoriteIds.includes(restaurant._id);
+            heart.src = isFavorited ? "images/fav_full.png" : "images/fav_black.png";
 
+            // Toggle favorite on heart click
             heart.addEventListener("click", async (e) => {
-                e.stopPropagation(); // prevent the card click from triggering
+                e.stopPropagation(); // Prevent the card click from firing
                 try {
                     const res = await fetch(`http://localhost:3000/api/users/favorites/${restaurant._id}`, {
                         method: "POST",
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+                        headers: { Authorization: `Bearer ${token}` },
                     });
-
                     const result = await res.json();
                     if (res.ok) {
-                        heart.src = result.favorited ? "images/fav_full.png" : "images/fav_black.png";
+                        // Update heart icon based on result.favorited
+                        const favorited = result.favorited;
+                        heart.src = favorited ? "images/fav_full.png" : "images/fav_black.png";
+                        // Also, if currently displaying this restaurant in the floating box and now it's unfavorited, hide it.
+                        if (!favorited && currentOpenRestaurantId === restaurant._id) {
+                            document.getElementById("restaurant-floating-box").style.display = "none";
+                            currentOpenRestaurantId = null;
+                        }
+                        // Optionally, update userFavoriteIds (if you intend to use it for subsequent checks)
+                        if (favorited && !userFavoriteIds.includes(restaurant._id)) {
+                            userFavoriteIds.push(restaurant._id);
+                        } else if (!favorited) {
+                            userFavoriteIds = userFavoriteIds.filter(id => id !== restaurant._id);
+                        }
                     } else {
                         alert("Could not toggle favorite. Try again.");
                     }
@@ -62,18 +86,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             });
 
-            // On restaurant card click
-            div.addEventListener("click", (e) => {
+            // On clicking the restaurant info: zoom map, show map popup, and toggle the detailed floating box
+            const restaurantInfo = div.querySelector(".restaurant-info");
+            restaurantInfo.addEventListener("click", (e) => {
                 e.stopPropagation();
                 const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
 
-                // Fly the map to the restaurant
+                // Fly the map to the restaurant location
                 map.flyTo(latlng, 16, {
                     animate: true,
                     duration: 0.5,
                 });
 
-                // Show the small Leaflet popup on the marker after the flyTo animation
+                // Open a small Leaflet popup showing the restaurant name and address
                 setTimeout(() => {
                     L.popup()
                         .setLatLng(latlng)
@@ -81,8 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         .openOn(map);
                 }, 500);
 
-                // Toggle the detailed floating box for the sidebar
-                // If the restaurant is already open, close the popup; otherwise, update and open it.
+                // Toggle the detailed floating box: close if the same restaurant is clicked again
                 const floatingBox = document.getElementById("restaurant-floating-box");
                 if (currentOpenRestaurantId === restaurant._id && floatingBox.style.display === "block") {
                     floatingBox.style.display = "none";
@@ -95,10 +119,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             matchesContainer.appendChild(div);
 
-            // Add marker to the map if not already added
+            // Add a marker on the map for this restaurant if not already added
             if (!markers[restaurant._id]) {
-                const marker = L.marker([restaurant.coordinates.lat, restaurant.coordinates.lng])
-                    .addTo(map)
+                const marker = L.marker([
+                    restaurant.coordinates.lat,
+                    restaurant.coordinates.lng,
+                ]).addTo(map)
                     .bindPopup(`<strong>${restaurant.name}</strong><br>${restaurant.address}`);
                 markers[restaurant._id] = marker;
             }
@@ -108,7 +134,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Function to show the sidebar popup with detailed restaurant info
+// Global variable to track the currently open restaurant popup
+let currentOpenRestaurantId = null;
+
+// Function to show the floating sidebar popup with detailed restaurant info
 function showFloatingBox(restaurant) {
     // Grab the floating box elements by their IDs
     const floatingBox = document.getElementById("restaurant-floating-box");
@@ -120,13 +149,13 @@ function showFloatingBox(restaurant) {
     const phoneElem = document.getElementById("popup-restaurant-phone");
     const websiteElem = document.getElementById("popup-restaurant-website");
 
-    // Update the popup's content with restaurant details
+    // Update the popup content with restaurant details
     nameElem.textContent = restaurant.name;
     descriptionElem.textContent = `${restaurant.description}`;
     addressElem.innerHTML = `<img src="images/location.png" alt="Address" class="popup-icon" /> ${restaurant.address}`;
     cuisineElem.innerHTML = `<img src="images/food.png" alt="Cuisine" class="popup-icon" /> ${restaurant.cuisine}`;
 
-    // Format operating hours using a flex layout for multiple lines
+    // Format operating hours using a flex container for a multi-line layout
     const hours = restaurant.operatingHours;
     hoursElem.innerHTML = `
       <div class="hours-container">
@@ -143,7 +172,7 @@ function showFloatingBox(restaurant) {
       </div>
     `;
 
-    // Separate phone and website details
+    // Separate phone details and website details
     phoneElem.innerHTML = `<img src="images/phone.png" alt="Phone" class="popup-icon" /> ${restaurant.phone}`;
     websiteElem.innerHTML = `
       <div class="website-container">
@@ -155,18 +184,17 @@ function showFloatingBox(restaurant) {
     // Show the floating box
     floatingBox.style.display = "block";
 
-    // Prevent clicks inside the floating box from closing it
+    // Prevent clicks inside the floating box from bubbling up (which could close it)
     floatingBox.addEventListener("click", (e) => {
         e.stopPropagation();
     });
 }
 
-// Document-level click to hide the floating box when clicking outside it
+// Hide the floating box when clicking outside of it
 document.addEventListener("click", function (e) {
     const floatingBox = document.getElementById("restaurant-floating-box");
-    // If the popup is visible and the click target is not inside it, hide the popup.
     if (floatingBox && floatingBox.style.display === "block" && !floatingBox.contains(e.target)) {
         floatingBox.style.display = "none";
-        currentOpenRestaurantId = null; // reset the current open restaurant id
+        currentOpenRestaurantId = null;
     }
 });
