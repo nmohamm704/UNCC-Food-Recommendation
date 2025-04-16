@@ -100,9 +100,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 // Open a small Leaflet popup showing the restaurant name and address
                 setTimeout(() => {
-                    L.popup()
+                    L.popup({
+                        // Shift popup above the pin by 20px (tweak as needed)
+                        offset: L.point(0, -25),
+                        className: 'no-arrow-popup'
+                    })
                         .setLatLng(latlng)
-                        .setContent(`<strong>${restaurant.name}</strong><br>${restaurant.address}`)
+                        .setContent(`<strong>${restaurant.name}</strong>`)
                         .openOn(map);
                 }, 500);
 
@@ -183,6 +187,17 @@ function showFloatingBox(restaurant) {
 
     // Show the floating box
     floatingBox.style.display = "block";
+
+    const closeButton = document.getElementById("popup-close");
+    if (closeButton) {
+        closeButton.onclick = function () {
+            floatingBox.style.display = "none";
+            if (window.mainMap) {
+                window.mainMap.closePopup();
+            }
+            currentOpenRestaurantId = null;
+        };
+    }
 
     // Prevent clicks inside the floating box from bubbling up (which could close it)
     floatingBox.addEventListener("click", (e) => {

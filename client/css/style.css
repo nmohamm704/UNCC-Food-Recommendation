@@ -330,3 +330,38 @@ aside {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+
+.no-arrow-popup .leaflet-popup-tip,
+.no-arrow-popup .leaflet-popup-tip-container {
+    display: none !important;
+}
+
+
+.no-arrow-popup .leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+
+}
+
+/* Close button inside the restaurant floating box */
+.popup-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    color: #444;
+    padding: 4px;
+    z-index: 1001;             /* sit above the box content */
+}
+
+/* Slight hover effect to make it obvious it’s clickable */
+.popup-close:hover {
+    color: #000;
+    background: rgba(0,0,0,0.05);
+    border-radius: 4px;
+}
