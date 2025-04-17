@@ -7,14 +7,8 @@ exports.getRestaurants = async (req, res) => {
 
         // Check if a filter is provided
         if (req.query.categories) {
-            const categoriesArray = req.query.categories
-                .split(',')
-                .map(cat => cat.trim())
-                .filter(cat => cat.length > 0); // remove empty strings
-
-            if (categoriesArray.length > 0) {
-                query.categories = { $all: categoriesArray };
-            }
+            const categoriesArray = req.query.categories.split(',');
+            query.categories = { $all: categoriesArray };
         }
 
         const restaurants = await Restaurant.find(query);
@@ -38,7 +32,7 @@ exports.getRestaurantById = async (req, res) => {
 // Get restaurant by search (name)
 exports.searchRestaurants = async (req, res) => {
     try {
-        const query = req.query.query?.trim();
+        const { query } = req.query;
 
         if (!query) {
             return res.status(400).json({ message: "Search query is required." });
