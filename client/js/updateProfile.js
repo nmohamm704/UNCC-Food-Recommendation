@@ -1,48 +1,59 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("edit-profile-form");
-
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('edit-profile-form');
     if (!form) return;
 
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem('token');
         if (!token) {
-            alert("You must be logged in to update your profile.");
+            alert('You must be logged in to update your profile.');
             return;
         }
 
-        const name = document.getElementById("edit-name").value;
-        const email = document.getElementById("edit-email").value;
-        const password = document.getElementById("edit-password").value;
-        const profileImage = document.getElementById("edit-profile-image").files[0];
+        // Grab values & trim
+        const name = document.getElementById('edit-name').value.trim();
+        const email = document.getElementById('edit-email').value.trim();
+        const password = document.getElementById('edit-password').value;      // do NOT trim pwd
+        const profileFile = document.getElementById('edit-profile-image').files[0];
 
+        // Build FormData only with provided fields
         const formData = new FormData();
-        formData.append("name", name);
-        formData.append("email", email);
-        if (password) formData.append("password", password);
-        if (profileImage) formData.append("profileImage", profileImage);
+        if (name) formData.append('name', name);
+        if (email) formData.append('email', email);
+        if (password) formData.append('password', password);
+        if (profileFile) formData.append('profileImage', profileFile);
+
+        // If the user didn’t change anything, you might skip the request:
+        if ([...formData.keys()].length === 0) {
+            alert('Nothing to update.');
+            return;
+        }
 
         try {
-            const response = await fetch("http://localhost:3000/api/users/profile", {
-                method: "PUT",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                body: formData,
+            const res = await fetch('http://localhost:3000/api/users/profile', {
+                method: 'PUT',
+                headers: {Authorization: `Bearer ${token}`},
+                body: formData
             });
 
-            const data = await response.json();
+            const data = await res.json();
 
-            if (response.ok) {
-                alert("Profile updated successfully!");
-                window.location.reload(); // or redirect if you prefer
+            if (res.ok) {
+                alert('Profile updated successfully!');
+                window.location.reload();
             } else {
-                alert(data.message || "Failed to update profile.");
+                // Handle express‑validator error array or single message
+                if (data.errors && Array.isArray(data.errors)) {
+                    const messages = data.errors.map(err => err.msg).join('\n');
+                    alert(messages);
+                } else {
+                    alert(data.message || 'Failed to update profile.');
+                }
             }
         } catch (err) {
-            console.error("Update error:", err);
-            alert("An error occurred while updating your profile.");
+            console.error('Update error:', err);
+            alert('An unexpected error occurred while updating your profile.');
         }
     });
 });

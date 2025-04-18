@@ -15,7 +15,7 @@ const checkProfileImage = (value, { req }) => {
     if (!req.file) {
         throw new Error('Image file is required.');
     }
-    next();
+    return true;
 };
 
 // ------------------ User Validators ------------------ //
