@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/map.css" />
     <link rel="stylesheet" href="css/navbar.css" />
     <link rel="stylesheet" href="css/fav.css" />
+    <link rel="stylesheet" href="css/profile.css" />
     <link rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -18,91 +19,6 @@
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""
     ></script>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #4da6ff;
-            padding: 10px 20px;
-            color: white;
-        }
-        .logo img {
-            height: 75px;
-        }
-
-        .icons {
-            display: flex;
-            align-items: center;
-        }
-        .icons button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 18px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        .icons img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-        }
-
-        .profile-img img {
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .profile-container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-        }
-        .profile-info h1 {
-            font-size: 24px;
-            margin: 0;
-        }
-        .profile-info p {
-            font-size: 16px;
-            color: #555;
-        }
-        .edit-profile-form input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .edit-profile-form button {
-            background-color: #4da6ff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .edit-profile-form button:hover {
-            background-color: #006bb3;
-        }
-    </style>
 </head>
 <body>
 <header>
