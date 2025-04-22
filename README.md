@@ -17,10 +17,7 @@ A simple web app that helps students find dining options around campus based on 
    - [5. Run the Server](#5-run-the-server)  
    - [6. Open the Client](#6-open-the-client)  
 5. [API Endpoints](#api-endpoints)   
-6. [Usage](#usage)  
-7. [Future Improvements](#future-improvements)  
-8. [Contributing](#contributing)  
-9. [License](#license)  
+6. [Usage](#usage)
 
 ---
 
