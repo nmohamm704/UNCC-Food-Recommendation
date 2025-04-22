@@ -67,7 +67,3 @@ A simple web app that helps students find dining options around campus based on 
 git clone https://github.com/your‑username/foodmatch.git
 cd foodmatch
 ```
-npm install
-# If you keep client and server separate:
-# cd client && npm install
-# cd server && npm install
