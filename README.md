@@ -16,12 +16,11 @@ A simple web app that helps students find dining options around campus based on 
    - [4. Seed the Database](#4-seed-the-database)  
    - [5. Run the Server](#5-run-the-server)  
    - [6. Open the Client](#6-open-the-client)  
-5. [API Endpoints](#api-endpoints)  
-6. [Project Structure](#project-structure)  
-7. [Usage](#usage)  
-8. [Future Improvements](#future-improvements)  
-9. [Contributing](#contributing)  
-10. [License](#license)  
+5. [API Endpoints](#api-endpoints)   
+6. [Usage](#usage)  
+7. [Future Improvements](#future-improvements)  
+8. [Contributing](#contributing)  
+9. [License](#license)  
 
 ---
 
