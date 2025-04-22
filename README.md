@@ -80,7 +80,7 @@ Create a file named `.env` in the root of the project:
 
 ```dotenv
 MONGO_URI=mongodb://127.0.0.1:27017/foodRecommender
-JWT_SECRET=your_jwt_secret_here
+JWT_SECRET=7b96a77ebf13a81f46db649c2bb122501f05cbc6552fdc2f16849a8d8a34ff32
 ```
 
 ### 4 Seed the Database
