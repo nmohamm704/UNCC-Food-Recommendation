@@ -66,3 +66,4 @@ A simple web app that helps students find dining options around campus based on 
 ```bash
 git clone https://github.com/your‑username/foodmatch.git
 cd foodmatch
+```
