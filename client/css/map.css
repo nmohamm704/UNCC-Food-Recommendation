@@ -1,5 +1,6 @@
 #map {
     width: 100%;
-    height: 100%;
+    height: 400px; /* or adjust to whatever height you want */
     border-radius: 10px;
+    margin: 2rem 0; /* spacing from other content */
 }
