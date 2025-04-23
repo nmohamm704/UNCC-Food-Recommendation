@@ -135,18 +135,40 @@
 <div class="container">
     <div id="side">
         <aside>
-            <button class="filter-btn" onclick="toggleDropdown()">Filters</button>
-            <div class="filter-dropdown" id="filterDropdown">
-                <label><input type="checkbox" value="vegan"> Vegan</label>
-                <label><input type="checkbox" value="vegetarian"> Vegetarian</label>
-                <label><input type="checkbox" value="halal"> Halal</label>
-                <label><input type="checkbox" value="dairy-free"> Dairy Free</label>
-                <label><input type="checkbox" value="gluten-free"> Gluten Free</label>
-                <label><input type="checkbox" value="kosher"> Kosher</label>
-                <label><input type="checkbox" value="nut-free"> Nut Free</label>
+            <!-- 1) Filter header: icon + selected chips -->
+            <div class="filter-section">
+                <div class="filter-header" id="filter-header">
+                    <img
+                            src="images/filter.png"
+                            alt="Filters"
+                            class="filter-icon"
+                            id="filter-icon"
+                    />
+                    <div
+                            class="selected-filters"
+                            id="selected-filters"
+                            data-placeholder="No Filters Selected"
+                    >
+                        No Filters Selected
+                    </div>
+                </div>
+
+                <!-- 2) Floating popup of all filter options -->
+                <div class="filter-popup" id="filter-popup">
+                    <button class="filter-option" data-value="Vegan">Vegan</button>
+                    <button class="filter-option" data-value="Vegetarian">Vegetarian</button>
+                    <button class="filter-option" data-value="Halal">Halal</button>
+                    <button class="filter-option" data-value="Dairy-Free">Dairy Free</button>
+                    <button class="filter-option" data-value="Gluten-Free">Gluten Free</button>
+                    <button class="filter-option" data-value="Kosher">Kosher</button>
+                    <button class="filter-option" data-value="Nut-Free">Nut Free</button>
+                </div>
             </div>
+
+            <!-- 3) Your matches list -->
             <div class="matches">
                 <h2>Matches</h2>
+                <!-- dynamically inserted restaurant cards here… -->
             </div>
         </aside>
     </div>
