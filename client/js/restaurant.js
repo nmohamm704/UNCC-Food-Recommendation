@@ -106,15 +106,30 @@ function renderRestaurants(restaurants, map, container, token, filterPopup) {
             }
         };
 
-        // Card click: close filter popup, center map, show tiny popup, toggle details box
+        // Card click: close filter popup, then toggle map‐popup + details box
         const info = div.querySelector(".restaurant-info");
-        info.onclick = e => {
+        info.addEventListener("click", e => {
             e.stopPropagation();
+            // 1) Close the filter popup if open
             filterPopup.style.display = "none";
 
+            // 2) Grab our details‐box & see if it's already open for *this* restaurant
+            const fb = document.getElementById("restaurant-floating-box");
+            if (currentOpenRestaurantId === restaurant._id && fb.style.display === "block") {
+                // → toggle‐off: hide both small popup and details box, then exit early
+                fb.style.display = "none";
+                map.closePopup();
+                currentOpenRestaurantId = null;
+                return;
+            }
+
+            // 3) Otherwise, we’re toggling *on* for this restaurant:
             const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
+
+            // 3a) Fly the map
             map.flyTo(latlng, 16, { animate: true, duration: 0.5 });
 
+            // 3b) After flight, open the mini popup
             setTimeout(() => {
                 L.popup({ offset: L.point(0, -25), className: "no-arrow-popup" })
                     .setLatLng(latlng)
@@ -122,16 +137,10 @@ function renderRestaurants(restaurants, map, container, token, filterPopup) {
                     .openOn(map);
             }, 500);
 
-            const fb = document.getElementById("restaurant-floating-box");
-            if (currentOpenRestaurantId === restaurant._id && fb.style.display === "block") {
-                fb.style.display = "none";
-                currentOpenRestaurantId = null;
-                map.closePopup();
-            } else {
-                showFloatingBox(restaurant);
-                currentOpenRestaurantId = restaurant._id;
-            }
-        };
+            // 3c) Show the big details box
+            showFloatingBox(restaurant);
+            currentOpenRestaurantId = restaurant._id;
+        });
 
         container.appendChild(div);
 
