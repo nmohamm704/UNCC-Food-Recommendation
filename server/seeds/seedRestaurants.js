@@ -33,7 +33,7 @@ const seedRestaurants = async () => {
             {
                 name: 'Chick-fil-A',
                 address: 'ID Office, Cone University Center, 9201 University City Blvd, Charlotte, NC 28223',
-                coordinates: { lat: 35.30737850309987, lng: -80.72818636621342 },
+                coordinates: { lat: 35.30689961202665, lng: -80.73087784142793 },
                 description: 'Fast-food chain serving chicken sandwiches & nuggets along with salads & sides.',
                 categories: ['Gluten-Free', 'Dairy-Free'],
                 cuisine: 'Fast Food',
@@ -133,7 +133,7 @@ const seedRestaurants = async () => {
             {
                 name: "Cava",
                 address: "8936 J M Keynes Dr, Charlotte, NC 28262",
-                coordinates: { lat: 35.310047046044815, lng: -80.74785836129277 },
+                coordinates: { lat: 35.31664756212835, lng: -80.7468314349392 },
                 description: "Fast-casual restaurant specializing in fresh and natural Mediterranean food options.",
                 categories: ["Vegetarian", "Nut-Free", "Vegan", "Dairy-Free", "Gluten-Free"],
                 cuisine: "Mediterranean",
@@ -173,7 +173,7 @@ const seedRestaurants = async () => {
             {
                 name: "Mikes Vegan Grill",
                 address: "440 E McCullough Dr #123, Charlotte, NC 28262",
-                coordinates: { lat: 35.34692818561043, lng: -80.74776002766338 },
+                coordinates: { lat: 35.30211492889527, lng: -80.74776187577642 },
                 description: "Vegan restaurant offering plant-based entrees and sides.",
                 categories: ["Vegetarian", "Nut-Free", "Vegan", "Gluten-Free", "Dairy-Free"],
                 cuisine: "Vegan Comfort Food",
