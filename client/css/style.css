@@ -365,3 +365,89 @@ aside {
     background: rgba(0,0,0,0.05);
     border-radius: 4px;
 }
+
+/* ──────────────────────────────────────────────────────── */
+/* Filter section wrapper (inside your <aside>) */
+.filter-section {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+/* Header line: icon + selected‑chips strip */
+.filter-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+/* Icon on the left */
+.filter-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Where “No Filters Selected” or the chosen chips live */
+.selected-filters {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #555;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* Placeholder text when nothing is chosen */
+.selected-filters[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: #888;
+}
+
+/* Optional: style the horizontal scrollbar */
+.selected-filters::-webkit-scrollbar {
+    height: 6px;
+}
+.selected-filters::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* The floating popup of all filter buttons */
+.filter-popup {
+    position: absolute;
+    top: 100%;       /* immediately below the header line */
+    left: 0;
+    right: 0;
+    margin-top: 0.25rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 500;
+    display: none;   /* toggled via JS */
+}
+
+/* Each filter option */
+.filter-option {
+    display: inline-block;
+    margin: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background: #fff;
+    color: #333;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+/* State when a filter is selected */
+.filter-option.selected {
+    background: var(--first-color);
+    border-color: var(--first-color);
+    color: #fff;
+}

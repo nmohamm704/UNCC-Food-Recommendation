@@ -1,215 +1,309 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    const token = localStorage.getItem("token");
-    const matchesContainer = document.querySelector(".matches");
-    const map = window.mainMap; // Reference to the global map object from map.js
-    const markers = {}; // Use an object to store markers by restaurant ID
-
-    if (!token || !matchesContainer || !map) return;
-
-    // First, fetch the user's favorites so that we know which restaurant IDs are favorited
-    let userFavoriteIds = [];
-    try {
-        const favResponse = await fetch("http://localhost:3000/api/users/favorites", {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        const favData = await favResponse.json();
-        if (Array.isArray(favData)) {
-            // Assumes each favorite has an _id property
-            userFavoriteIds = favData.map(fav => fav._id);
-        }
-    } catch (favErr) {
-        console.error("Failed to load user's favorites:", favErr);
-    }
-
-    // Now, fetch all restaurants
-    try {
-        const response = await fetch("http://localhost:3000/api/restaurants", {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        const restaurants = await response.json();
-
-        if (!Array.isArray(restaurants)) {
-            console.error("Unexpected response format:", restaurants);
-            return;
-        }
-        if (restaurants.length === 0) {
-            matchesContainer.innerHTML += "<p>No matches found.</p>";
-            return;
-        }
-
-        restaurants.forEach((restaurant) => {
-            // Create match card in the sidebar for each restaurant
-            const div = document.createElement("div");
-            div.classList.add("match");
-            div.innerHTML = `
-                <div class="restaurant-info" data-id="${restaurant._id}">
-                    <div class="restaurant-name">${restaurant.name}</div>
-                    <div class="restaurant-cuisine">${restaurant.cuisine}</div>
-                </div>
-                <img src="images/fav_black.png" alt="fav black" class="fav-black" style="cursor:pointer;" data-id="${restaurant._id}" />
-            `;
-
-            // Handle favorite heart image based on whether the restaurant is in the user's favorites
-            const heart = div.querySelector(".fav-black");
-            const isFavorited = userFavoriteIds.includes(restaurant._id);
-            heart.src = isFavorited ? "images/fav_full.png" : "images/fav_black.png";
-
-            // Toggle favorite on heart click
-            heart.addEventListener("click", async (e) => {
-                e.stopPropagation(); // Prevent the card click from firing
-                try {
-                    const res = await fetch(`http://localhost:3000/api/users/favorites/${restaurant._id}`, {
-                        method: "POST",
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
-                    const result = await res.json();
-                    if (res.ok) {
-                        // Update heart icon based on result.favorited
-                        const favorited = result.favorited;
-                        heart.src = favorited ? "images/fav_full.png" : "images/fav_black.png";
-                        // Also, if currently displaying this restaurant in the floating box and now it's unfavorited, hide it.
-                        if (!favorited && currentOpenRestaurantId === restaurant._id) {
-                            document.getElementById("restaurant-floating-box").style.display = "none";
-                            currentOpenRestaurantId = null;
-                        }
-                        // Optionally, update userFavoriteIds (if you intend to use it for subsequent checks)
-                        if (favorited && !userFavoriteIds.includes(restaurant._id)) {
-                            userFavoriteIds.push(restaurant._id);
-                        } else if (!favorited) {
-                            userFavoriteIds = userFavoriteIds.filter(id => id !== restaurant._id);
-                        }
-                    } else {
-                        alert("Could not toggle favorite. Try again.");
-                    }
-                } catch (err) {
-                    console.error("Error toggling favorite:", err);
-                }
-            });
-
-            // On clicking the restaurant info: zoom map, show map popup, and toggle the detailed floating box
-            const restaurantInfo = div.querySelector(".restaurant-info");
-            restaurantInfo.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
-
-                // Fly the map to the restaurant location
-                map.flyTo(latlng, 16, {
-                    animate: true,
-                    duration: 0.5,
-                });
-
-                // Open a small Leaflet popup showing the restaurant name and address
-                setTimeout(() => {
-                    L.popup({
-                        // Shift popup above the pin by 20px (tweak as needed)
-                        offset: L.point(0, -25),
-                        className: 'no-arrow-popup'
-                    })
-                        .setLatLng(latlng)
-                        .setContent(`<strong>${restaurant.name}</strong>`)
-                        .openOn(map);
-                }, 500);
-
-                // Toggle the detailed floating box: close if the same restaurant is clicked again
-                const floatingBox = document.getElementById("restaurant-floating-box");
-                if (currentOpenRestaurantId === restaurant._id && floatingBox.style.display === "block") {
-                    floatingBox.style.display = "none";
-                    currentOpenRestaurantId = null;
-                } else {
-                    showFloatingBox(restaurant);
-                    currentOpenRestaurantId = restaurant._id;
-                }
-            });
-
-            matchesContainer.appendChild(div);
-
-            // Add a marker on the map for this restaurant if not already added
-            if (!markers[restaurant._id]) {
-                const marker = L.marker([
-                    restaurant.coordinates.lat,
-                    restaurant.coordinates.lng,
-                ]).addTo(map)
-                    .bindPopup(`<strong>${restaurant.name}</strong><br>${restaurant.address}`);
-                markers[restaurant._id] = marker;
-            }
-        });
-    } catch (err) {
-        console.error("Failed to load restaurants:", err);
-    }
-});
-
-// Global variable to track the currently open restaurant popup
+// ─────────────────────────────────────────────────────────────────────────────
+// Global state
+// ─────────────────────────────────────────────────────────────────────────────
 let currentOpenRestaurantId = null;
+const markers = {};
+let userFavoriteIds = [];
 
-// Function to show the floating sidebar popup with detailed restaurant info
+// ─────────────────────────────────────────────────────────────────────────────
+// Show the detailed floating box next to the sidebar
+// ─────────────────────────────────────────────────────────────────────────────
 function showFloatingBox(restaurant) {
-    // Grab the floating box elements by their IDs
-    const floatingBox = document.getElementById("restaurant-floating-box");
-    const nameElem = document.getElementById("popup-restaurant-name");
-    const addressElem = document.getElementById("popup-restaurant-address");
-    const cuisineElem = document.getElementById("popup-restaurant-cuisine");
-    const descriptionElem = document.getElementById("popup-restaurant-description");
-    const hoursElem = document.getElementById("popup-restaurant-hours");
-    const phoneElem = document.getElementById("popup-restaurant-phone");
-    const websiteElem = document.getElementById("popup-restaurant-website");
+    const fb         = document.getElementById("restaurant-floating-box");
+    const nameEl     = document.getElementById("popup-restaurant-name");
+    const descEl     = document.getElementById("popup-restaurant-description");
+    const addrEl     = document.getElementById("popup-restaurant-address");
+    const cuisineEl  = document.getElementById("popup-restaurant-cuisine");
+    const hoursEl    = document.getElementById("popup-restaurant-hours");
+    const phoneEl    = document.getElementById("popup-restaurant-phone");
+    const webEl      = document.getElementById("popup-restaurant-website");
+    const closeBtn   = document.getElementById("popup-close");
+    const h = restaurant.operatingHours;
 
-    // Update the popup content with restaurant details
-    nameElem.textContent = restaurant.name;
-    descriptionElem.textContent = `${restaurant.description}`;
-    addressElem.innerHTML = `<img src="images/location.png" alt="Address" class="popup-icon" /> ${restaurant.address}`;
-    cuisineElem.innerHTML = `<img src="images/food.png" alt="Cuisine" class="popup-icon" /> ${restaurant.cuisine}`;
-
-    // Format operating hours using a flex container for a multi-line layout
-    const hours = restaurant.operatingHours;
-    hoursElem.innerHTML = `
-      <div class="hours-container">
-        <img src="images/schedule.png" alt="Hours" class="popup-icon" />
-        <div class="hours-lines">
-          <div>Mon: ${hours.monday}</div>
-          <div>Tue: ${hours.tuesday}</div>
-          <div>Wed: ${hours.wednesday}</div>
-          <div>Thu: ${hours.thursday}</div>
-          <div>Fri: ${hours.friday}</div>
-          <div>Sat: ${hours.saturday}</div>
-          <div>Sun: ${hours.sunday}</div>
-        </div>
+    nameEl.textContent    = restaurant.name;
+    descEl.textContent    = restaurant.description;
+    addrEl.innerHTML      = `<img src="images/location.png" class="popup-icon"/> ${restaurant.address}`;
+    cuisineEl.innerHTML   = `<img src="images/food.png" class="popup-icon"/> ${restaurant.cuisine}`;
+    hoursEl.innerHTML     = `
+    <div class="hours-container">
+      <img src="images/schedule.png" class="popup-icon"/>
+      <div class="hours-lines">
+        <div>Mon: ${h.monday}</div>
+        <div>Tue: ${h.tuesday}</div>
+        <div>Wed: ${h.wednesday}</div>
+        <div>Thu: ${h.thursday}</div>
+        <div>Fri: ${h.friday}</div>
+        <div>Sat: ${h.saturday}</div>
+        <div>Sun: ${h.sunday}</div>
       </div>
+    </div>`;
+    phoneEl.innerHTML     = `<img src="images/phone.png" class="popup-icon"/> ${restaurant.phone}`;
+    webEl.innerHTML       = `
+    <div class="website-container">
+      <img src="images/web.png" class="popup-icon"/>
+      <a href="${restaurant.website}" target="_blank" class="website-text">${restaurant.website}</a>
+    </div>`;
+
+    fb.style.display = "block";
+
+    // Close button: hides both popups
+    closeBtn.onclick = () => {
+        fb.style.display = "none";
+        if (window.mainMap) window.mainMap.closePopup();
+        currentOpenRestaurantId = null;
+    };
+
+    // Don’t let clicks inside the box bubble up and auto‐close it
+    fb.addEventListener("click", e => e.stopPropagation());
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Render an array of restaurants into the sidebar + map
+// ─────────────────────────────────────────────────────────────────────────────
+function renderRestaurants(restaurants, map, container, token, filterPopup) {
+    container.innerHTML = "<h2>Matches</h2>";
+
+    restaurants.forEach(restaurant => {
+        const div = document.createElement("div");
+        div.classList.add("match");
+        div.innerHTML = `
+      <div class="restaurant-info" data-id="${restaurant._id}">
+        <div class="restaurant-name">${restaurant.name}</div>
+        <div class="restaurant-cuisine">${restaurant.cuisine}</div>
+      </div>
+      <img
+        src="images/${userFavoriteIds.includes(restaurant._id) ? 'fav_full' : 'fav_black'}.png"
+        alt="Favorite"
+        class="fav-black"
+        data-id="${restaurant._id}"
+        style="cursor:pointer"
+      />
     `;
 
-    // Separate phone details and website details
-    phoneElem.innerHTML = `<img src="images/phone.png" alt="Phone" class="popup-icon" /> ${restaurant.phone}`;
-    websiteElem.innerHTML = `
-      <div class="website-container">
-        <img src="images/web.png" alt="Website" class="popup-icon" />
-        <a href="${restaurant.website}" target="_blank" class="website-text">${restaurant.website}</a>
-      </div>
-    `;
-
-    // Show the floating box
-    floatingBox.style.display = "block";
-
-    const closeButton = document.getElementById("popup-close");
-    if (closeButton) {
-        closeButton.onclick = function () {
-            floatingBox.style.display = "none";
-            if (window.mainMap) {
-                window.mainMap.closePopup();
+        // Heart toggle
+        const heart = div.querySelector(".fav-black");
+        heart.onclick = async e => {
+            e.stopPropagation();
+            try {
+                const res = await fetch(
+                    `http://localhost:3000/api/users/favorites/${restaurant._id}`,
+                    { method: "POST", headers: { Authorization: `Bearer ${token}` } }
+                );
+                const result = await res.json();
+                if (!res.ok) throw new Error();
+                const fav = result.favorited;
+                heart.src = fav ? "images/fav_full.png" : "images/fav_black.png";
+                if (fav) userFavoriteIds.push(restaurant._id);
+                else {
+                    userFavoriteIds = userFavoriteIds.filter(id => id !== restaurant._id);
+                    if (currentOpenRestaurantId === restaurant._id) {
+                        document.getElementById("restaurant-floating-box").style.display = "none";
+                        currentOpenRestaurantId = null;
+                    }
+                }
+            } catch {
+                alert("Could not toggle favorite. Try again.");
             }
-            currentOpenRestaurantId = null;
         };
-    }
 
-    // Prevent clicks inside the floating box from bubbling up (which could close it)
-    floatingBox.addEventListener("click", (e) => {
-        e.stopPropagation();
+        // Card click: close filter popup, then toggle map‐popup + details box
+        const info = div.querySelector(".restaurant-info");
+        info.addEventListener("click", e => {
+            e.stopPropagation();
+            // 1) Close the filter popup if open
+            filterPopup.style.display = "none";
+
+            // 2) Grab our details‐box & see if it's already open for *this* restaurant
+            const fb = document.getElementById("restaurant-floating-box");
+            if (currentOpenRestaurantId === restaurant._id && fb.style.display === "block") {
+                // → toggle‐off: hide both small popup and details box, then exit early
+                fb.style.display = "none";
+                map.closePopup();
+                currentOpenRestaurantId = null;
+                return;
+            }
+
+            // 3) Otherwise, we’re toggling *on* for this restaurant:
+            const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
+
+            // 3a) Fly the map
+            map.flyTo(latlng, 16, { animate: true, duration: 0.5 });
+
+            // 3b) After flight, open the mini popup
+            setTimeout(() => {
+                L.popup({ offset: L.point(0, -25), className: "no-arrow-popup" })
+                    .setLatLng(latlng)
+                    .setContent(`<strong>${restaurant.name}</strong>`)
+                    .openOn(map);
+            }, 500);
+
+            // 3c) Show the big details box
+            showFloatingBox(restaurant);
+            currentOpenRestaurantId = restaurant._id;
+        });
+
+        container.appendChild(div);
+
+        // Add marker if missing
+        if (!markers[restaurant._id]) {
+            markers[restaurant._id] = L.marker([
+                restaurant.coordinates.lat,
+                restaurant.coordinates.lng
+            ])
+                .addTo(map)
+                .bindPopup(`<strong>${restaurant.name}</strong><br>${restaurant.address}`);
+        }
     });
 }
 
-// Hide the floating box when clicking outside of it
-document.addEventListener("click", function (e) {
-    const floatingBox = document.getElementById("restaurant-floating-box");
-    if (floatingBox && floatingBox.style.display === "block" && !floatingBox.contains(e.target)) {
-        floatingBox.style.display = "none";
-        currentOpenRestaurantId = null;
+// ─────────────────────────────────────────────────────────────────────────────
+// Fetch & render restaurants with optional category filters
+// ─────────────────────────────────────────────────────────────────────────────
+async function loadAndRenderRestaurants(categories, map, container, token, filterPopup) {
+    // Clear sidebar + markers
+    container.innerHTML = "<h2>Matches</h2>";
+    Object.values(markers).forEach(m => map.removeLayer(m));
+    Object.keys(markers).forEach(id => delete markers[id]);
+
+    // Build query string
+    const qs = categories.length
+        ? "?categories=" + categories.map(encodeURIComponent).join(",")
+        : "";
+
+    // Fetch
+    const resp = await fetch("http://localhost:3000/api/restaurants" + qs, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    const restaurants = await resp.json();
+
+    if (!Array.isArray(restaurants) || restaurants.length === 0) {
+        container.innerHTML += "<p>No matches found.</p>";
+        return;
     }
+
+    renderRestaurants(restaurants, map, container, token, filterPopup);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Fetch & render search results
+// ─────────────────────────────────────────────────────────────────────────────
+async function performSearch(query, map, container, token, filterPopup) {
+    // Clear sidebar + markers
+    container.innerHTML = "<h2>Matches</h2>";
+    Object.values(markers).forEach(m => map.removeLayer(m));
+    Object.keys(markers).forEach(id => delete markers[id]);
+
+    if (!query) return loadAndRenderRestaurants([], map, container, token, filterPopup);
+
+    try {
+        const resp = await fetch(
+            `http://localhost:3000/api/restaurants/search?query=${encodeURIComponent(query)}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const results = await resp.json();
+        if (!Array.isArray(results) || results.length === 0) {
+            container.innerHTML += "<p>No matches found.</p>";
+            return;
+        }
+        renderRestaurants(results, map, container, token, filterPopup);
+    } catch (err) {
+        console.error("Search error:", err);
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Wire everything up on DOMContentLoaded
+// ─────────────────────────────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", async () => {
+    const token            = localStorage.getItem("token");
+    const matchesContainer = document.querySelector(".matches");
+    const map              = window.mainMap;
+    if (!token || !matchesContainer || !map) return;
+
+    // 1) Load user favorites
+    try {
+        const favResp = await fetch("http://localhost:3000/api/users/favorites", {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const favData = await favResp.json();
+        if (Array.isArray(favData)) userFavoriteIds = favData.map(f => f._id);
+    } catch (err) {
+        console.error("Could not load favorites:", err);
+    }
+
+    // 2) Filter UI
+    const filterHeader      = document.getElementById("filter-header");
+    const filterPopup       = document.getElementById("filter-popup");
+    const filterOptions     = filterPopup.querySelectorAll(".filter-option");
+    const selectedFiltersEl = document.getElementById("selected-filters");
+    let   selectedFilters   = [];
+
+    filterHeader.addEventListener("click", e => {
+        e.stopPropagation();
+        filterPopup.style.display = filterPopup.style.display === "block" ? "none" : "block";
+    });
+    document.addEventListener("click", () => {
+        filterPopup.style.display = "none";
+    });
+    filterPopup.addEventListener("click", e => e.stopPropagation());
+
+    function updateFilterChips() {
+        selectedFiltersEl.innerHTML = "";
+        if (selectedFilters.length === 0) {
+            selectedFiltersEl.setAttribute("data-placeholder", "No Filters Selected");
+        } else {
+            selectedFiltersEl.removeAttribute("data-placeholder");
+            selectedFilters.forEach(f => {
+                const chip = document.createElement("div");
+                chip.className = "filter-option selected";
+                chip.textContent = f;
+                selectedFiltersEl.appendChild(chip);
+            });
+        }
+    }
+
+    filterOptions.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const val = btn.dataset.value;
+            const idx = selectedFilters.indexOf(val);
+            if (idx === -1) {
+                selectedFilters.push(val);
+                btn.classList.add("selected");
+            } else {
+                selectedFilters.splice(idx, 1);
+                btn.classList.remove("selected");
+            }
+            updateFilterChips();
+            loadAndRenderRestaurants(selectedFilters, map, matchesContainer, token, filterPopup);
+        });
+    });
+    updateFilterChips();
+
+    // 3) Search UI
+    const searchInput  = document.querySelector(".search-bar input");
+    const searchButton = document.querySelector(".search-bar button");
+    if (searchInput && searchButton) {
+        searchButton.addEventListener("click", () => {
+            const q = searchInput.value.trim();
+            performSearch(q, map, matchesContainer, token, filterPopup);
+        });
+        searchInput.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                searchButton.click();
+            }
+        });
+    }
+
+    // 4) Initial load
+    await loadAndRenderRestaurants([], map, matchesContainer, token, filterPopup);
+
+    // 5) Clicking outside floating box closes it
+    document.addEventListener("click", e => {
+        const fb = document.getElementById("restaurant-floating-box");
+        if (fb && fb.style.display === "block" && !fb.contains(e.target)) {
+            fb.style.display = "none";
+            currentOpenRestaurantId = null;
+        }
+    });
 });
