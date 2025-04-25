@@ -66,18 +66,20 @@ function renderRestaurants(restaurants, map, container, token, filterPopup) {
     restaurants.forEach(restaurant => {
         const div = document.createElement("div");
         div.classList.add("match");
+        const isFavorited = userFavoriteIds.includes(restaurant._id);
         div.innerHTML = `
-      <div class="restaurant-info" data-id="${restaurant._id}">
-        <div class="restaurant-name">${restaurant.name}</div>
-        <div class="restaurant-cuisine">${restaurant.cuisine}</div>
-      </div>
-      <img
-        src="images/${userFavoriteIds.includes(restaurant._id) ? 'fav_full' : 'fav_black'}.png"
-        alt="Favorite"
-        class="fav-black"
-        data-id="${restaurant._id}"
-        style="cursor:pointer"
-      />
+       <div class="restaurant-info" data-id="${restaurant._id}">
+    <div class="restaurant-top" style="display: flex; align-items: center; gap: 10px;">
+      <img src="images/${isFavorited ? 'fav_full' : 'fav_black'}.png" 
+           alt="Favorite" 
+           class="fav-black" 
+           style="cursor: pointer; width: 20px; height: 20px;" 
+           data-id="${restaurant._id}" />
+      <div class="restaurant-name">${restaurant.name}</div>
+    </div>
+    <div class="restaurant-cuisine">${restaurant.cuisine}</div>
+  </div>
+     
     `;
 
         // Heart toggle
@@ -197,7 +199,7 @@ async function performSearch(query, map, container, token, filterPopup) {
 
     try {
         const resp = await fetch(
-            `http://localhost:3000/api/restaurants/search?query=${encodeURIComponent(query)}`,
+            `http://localhost:3000/api/restaurants/search?search=${encodeURIComponent(query)}`,
             { headers: { Authorization: `Bearer ${token}` } }
         );
         const results = await resp.json();

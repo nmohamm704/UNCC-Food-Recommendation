@@ -1,19 +1,98 @@
-// Global variable to track which restaurant is currently shown in the floating box
 let currentOpenRestaurantId = null;
+let selectedFilters = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
     const matchesContainer = document.querySelector(".matches");
-    const map = window.mainMap; // From map.js
-    const markers = {}; // Prevent duplicate markers
+    const map = window.mainMap;
+    const markers = {};
 
     if (!token || !matchesContainer || !map) return;
 
+    await loadAndRenderFavorites("", map, matchesContainer, token, markers);
+
+    // Search bar functionality
+    const searchInput = document.querySelector(".search-bar input");
+    const searchButton = document.querySelector(".search-bar button");
+
+    if (searchInput && searchButton) {
+        searchButton.addEventListener("click", async () => {
+            const query = searchInput.value.trim();
+            await loadAndRenderFavorites(query, map, matchesContainer, token, markers);
+        });
+    }
+
+    // Filter functionality
+    const filterHeader = document.getElementById("filter-header");
+    const filterPopup = document.getElementById("filter-popup");
+    const filterOptions = filterPopup.querySelectorAll(".filter-option");
+    const selectedFiltersEl = document.getElementById("selected-filters");
+
+    if (filterHeader && filterPopup && filterOptions.length) {
+        filterHeader.addEventListener("click", (e) => {
+            e.stopPropagation();
+            filterPopup.style.display = filterPopup.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", () => {
+            filterPopup.style.display = "none";
+        });
+
+        filterPopup.addEventListener("click", (e) => e.stopPropagation());
+
+        function updateFilterChips() {
+            selectedFiltersEl.innerHTML = "";
+            if (selectedFilters.length === 0) {
+                selectedFiltersEl.setAttribute("data-placeholder", "No Filters Selected");
+                selectedFiltersEl.innerHTML = "No Filters Selected";
+            } else {
+                selectedFiltersEl.removeAttribute("data-placeholder");
+                selectedFilters.forEach((filter) => {
+                    const chip = document.createElement("div");
+                    chip.className = "filter-option selected";
+                    chip.textContent = filter;
+                    selectedFiltersEl.appendChild(chip);
+                });
+            }
+        }
+
+        filterOptions.forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                const val = btn.dataset.value;
+                const idx = selectedFilters.indexOf(val);
+                if (idx === -1) {
+                    selectedFilters.push(val);
+                    btn.classList.add("selected");
+                } else {
+                    selectedFilters.splice(idx, 1);
+                    btn.classList.remove("selected");
+                }
+                updateFilterChips();
+                await loadAndRenderFavorites("", map, matchesContainer, token, markers);
+            });
+        });
+
+        updateFilterChips();
+    }
+});
+
+async function loadAndRenderFavorites(query, map, container, token, markers) {
     try {
-        const response = await fetch("http://localhost:3000/api/users/favorites", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+        let url = "http://localhost:3000/api/users/favorites";
+        const params = new URLSearchParams();
+
+        if (query) {
+            params.append("search", query);
+        }
+        if (selectedFilters.length > 0) {
+            params.append("categories", selectedFilters.join(","));
+        }
+        if ([...params].length > 0) {
+            url += `?${params.toString()}`;
+        }
+
+        const response = await fetch(url, {
+            headers: { Authorization: `Bearer ${token}` },
         });
 
         const favorites = await response.json();
@@ -23,50 +102,41 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        container.innerHTML = "<h2>Favorites</h2>";
+
         if (favorites.length === 0) {
-            matchesContainer.innerHTML += "<p>No favorites found.</p>";
+            container.innerHTML += "<p>No favorites found.</p>";
             return;
         }
-
-        // Clear previous matches if any
-        matchesContainer.innerHTML = "<h2>Favorites</h2>";
 
         favorites.forEach((restaurant) => {
             const div = document.createElement("div");
             div.classList.add("match");
             div.innerHTML = `
                 <div class="restaurant-info" data-id="${restaurant._id}">
-                    <div class="restaurant-name">${restaurant.name}</div>
+                    <div class="restaurant-top" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="images/fav_full.png" alt="Favorite" class="fav-full" style="cursor:pointer; width: 20px; height: 20px;" data-id="${restaurant._id}" />
+                        <div class="restaurant-name">${restaurant.name}</div>
+                    </div>
                     <div class="restaurant-cuisine">${restaurant.cuisine}</div>
                 </div>
-                <img src="images/fav_full.png" alt="fav full" class="fav-full" style="cursor:pointer;" data-id="${restaurant._id}" />
             `;
 
-            // Unfavorite functionality
             const heart = div.querySelector(".fav-full");
             heart.addEventListener("click", async (e) => {
-                e.stopPropagation(); // Prevent the card click from firing
+                e.stopPropagation();
                 try {
                     const res = await fetch(`http://localhost:3000/api/users/favorites/${restaurant._id}`, {
                         method: "POST",
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+                        headers: { Authorization: `Bearer ${token}` },
                     });
-
                     const result = await res.json();
                     if (res.ok && !result.favorited) {
-                        // Remove the restaurant card from the UI
                         div.remove();
-                        if (markers[restaurant._id]) {
-                            map.removeLayer(markers[restaurant._id]);
-                        }
-                        // If this restaurant's popup is open, close it
+                        if (markers[restaurant._id]) map.removeLayer(markers[restaurant._id]);
                         if (currentOpenRestaurantId === restaurant._id) {
                             const floatingBox = document.getElementById("restaurant-floating-box");
-                            if (floatingBox) {
-                                floatingBox.style.display = "none";
-                            }
+                            if (floatingBox) floatingBox.style.display = "none";
                             currentOpenRestaurantId = null;
                         }
                     } else {
@@ -77,52 +147,43 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             });
 
-            // On clicking the restaurant info
-            const restaurantInfo = div.querySelector(".restaurant-info");
-            restaurantInfo.addEventListener("click", (e) => {
-                e.stopPropagation();
+            div.querySelector(".restaurant-info").addEventListener("click", async () => {
                 const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
 
-                // Fly the map to the restaurant location
-                map.flyTo(latlng, 16, {
-                    animate: true,
-                    duration: 0.5,
-                });
+                map.flyTo(latlng, 16, { animate: true, duration: 0.5 });
 
-                // Open the small Leaflet popup (name and address)
                 setTimeout(() => {
-                    L.popup({
-                        // Shift popup above the pin by 20px (tweak as needed)
-                        offset: L.point(0, -25),
-                        className: 'no-arrow-popup'
-                    })
+                    L.popup({ offset: L.point(0, -25), className: 'no-arrow-popup' })
                         .setLatLng(latlng)
                         .setContent(`<strong>${restaurant.name}</strong>`)
                         .openOn(map);
                 }, 500);
 
-                // Toggle the detailed sidebar popup:
                 const floatingBox = document.getElementById("restaurant-floating-box");
                 if (currentOpenRestaurantId === restaurant._id && floatingBox.style.display === "block") {
-                    // If the same restaurant is already open, close the popup
                     floatingBox.style.display = "none";
                     currentOpenRestaurantId = null;
                 } else {
-                    // Show the popup with this restaurant's details
-                    showFloatingBox(restaurant);
-                    currentOpenRestaurantId = restaurant._id;
+                    try {
+                        const res = await fetch(`http://localhost:3000/api/restaurants/${restaurant._id}`, {
+                            headers: { Authorization: `Bearer ${token}` },
+                        });
+                        const fullRestaurant = await res.json();
+                        showFloatingBox(fullRestaurant);
+                        currentOpenRestaurantId = restaurant._id;
+                    } catch (error) {
+                        console.error("Failed to load restaurant details:", error);
+                    }
                 }
             });
 
-            matchesContainer.appendChild(div);
+            container.appendChild(div);
 
-            // Add a marker on the map if not already present
             if (!markers[restaurant._id]) {
                 const marker = L.marker([
                     restaurant.coordinates.lat,
-                    restaurant.coordinates.lng,
-                ])
-                    .addTo(map)
+                    restaurant.coordinates.lng
+                ]).addTo(map)
                     .bindPopup(`<strong>${restaurant.name}</strong><br>${restaurant.address}`);
                 markers[restaurant._id] = marker;
             }
@@ -130,11 +191,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (err) {
         console.error("Failed to load favorites:", err);
     }
-});
+}
 
-// Function to show the sidebar popup with detailed restaurant info
 function showFloatingBox(restaurant) {
-    // Get the floating box elements by their IDs
     const floatingBox = document.getElementById("restaurant-floating-box");
     const nameElem = document.getElementById("popup-restaurant-name");
     const addressElem = document.getElementById("popup-restaurant-address");
@@ -144,13 +203,11 @@ function showFloatingBox(restaurant) {
     const phoneElem = document.getElementById("popup-restaurant-phone");
     const websiteElem = document.getElementById("popup-restaurant-website");
 
-    // Update the floating box content with restaurant details
     nameElem.textContent = restaurant.name;
-    descriptionElem.textContent = `${restaurant.description}`;
+    descriptionElem.textContent = restaurant.description;
     addressElem.innerHTML = `<img src="images/location.png" alt="Address" class="popup-icon" /> ${restaurant.address}`;
     cuisineElem.innerHTML = `<img src="images/food.png" alt="Cuisine" class="popup-icon" /> ${restaurant.cuisine}`;
 
-    // Format operating hours using a flex container
     const hours = restaurant.operatingHours;
     hoursElem.innerHTML = `
       <div class="hours-container">
@@ -175,27 +232,23 @@ function showFloatingBox(restaurant) {
       </div>
     `;
 
-    // Show the floating box
     floatingBox.style.display = "block";
 
     const closeButton = document.getElementById("popup-close");
     if (closeButton) {
         closeButton.onclick = function () {
             floatingBox.style.display = "none";
-            if (window.mainMap) {
-                window.mainMap.closePopup();
-            }
+            if (window.mainMap) window.mainMap.closePopup();
             currentOpenRestaurantId = null;
         };
     }
 
-    // Prevent clicks inside the floating box from hiding it
     floatingBox.addEventListener("click", (e) => {
         e.stopPropagation();
     });
 }
 
-// Document-level click to hide the floating box when clicking outside it
+
 document.addEventListener("click", function (e) {
     const floatingBox = document.getElementById("restaurant-floating-box");
     if (floatingBox && floatingBox.style.display === "block" && !floatingBox.contains(e.target)) {
