@@ -32,7 +32,7 @@ exports.getRestaurantById = async (req, res) => {
 // Get restaurant by search (name)
 exports.searchRestaurants = async (req, res) => {
     try {
-        const { query } = req.query;
+        const  query  = req.query.q;
 
         if (!query) {
             return res.status(400).json({ message: "Search query is required." });
