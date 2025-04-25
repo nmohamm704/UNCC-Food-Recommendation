@@ -25,11 +25,10 @@ router.put("/profile", authenticate, upload.single('profileImage'), validateProf
 // View User Profile
 router.get('/profile', authenticate, userController.getProfile);
 
-// Get All Favorites
+// Get All Favorites; Search and Filter Favorites
 router.get('/favorites', authenticate, userController.getFavoriteRestaurants);
 
 // Un/Favorite a Restaurant
 router.post('/favorites/:restaurantId', authenticate, validateObjectId, runValidation, userController.toggleFavorite);
-
 
 module.exports = router;

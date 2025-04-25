@@ -16,6 +16,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('edit-email').value.trim();
         const password = document.getElementById('edit-password').value;      // do NOT trim pwd
         const profileFile = document.getElementById('edit-profile-image').files[0];
+        if (profileFile) {
+            const allowed = [
+                'image/jpeg',
+                'image/png',
+                'image/jpg',
+                'image/gif',
+                'image/webp',
+                'image/avif'
+            ];
+            if (!allowed.includes(profileFile.type)) {
+                return showErrors({
+                    errors: [
+                        { msg: 'Invalid file type. Only images are allowed!', param: 'profileImage' }
+                    ]
+                });
+            }
+        }
 
         // Build FormData only with provided fields
         const formData = new FormData();
@@ -43,13 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Profile updated successfully!');
                 window.location.reload();
             } else {
-                // Handle express‑validator error array or single message
-                if (data.errors && Array.isArray(data.errors)) {
-                    const messages = data.errors.map(err => err.msg).join('\n');
-                    alert(messages);
-                } else {
-                    alert(data.message || 'Failed to update profile.');
-                }
+                showErrors(data);
             }
         } catch (err) {
             console.error('Update error:', err);

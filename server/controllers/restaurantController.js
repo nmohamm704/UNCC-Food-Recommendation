@@ -1,54 +1,49 @@
-const Restaurant = require('../models/restaurantModel');
+const Restaurant   = require('../models/restaurantModel');
+const asyncHandler = require('../utils/asyncHandler');
 
-// Get all restaurants
-exports.getRestaurants = async (req, res) => {
-    try {
-        let query = {};
+/* ------------------------- Get all restaurants ------------------------- */
+exports.getRestaurants = asyncHandler(async (req, res) => {
+    const query = {};
 
-        // Check if a filter is provided
-        if (req.query.categories) {
-            const categoriesArray = req.query.categories.split(',');
-            query.categories = { $all: categoriesArray };
-        }
-
-        const restaurants = await Restaurant.find(query);
-        res.json(restaurants);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    if (req.query.categories) {
+        const categoriesArray = req.query.categories
+            .split(',')
+            .map(cat => cat.trim().toLowerCase());
+        query.categories = { $all: categoriesArray };
     }
-};
 
-// Get a single restaurant by ID
-exports.getRestaurantById = async (req, res) => {
-    try {
-        const restaurant = await Restaurant.findById(req.params.id);
-        if (!restaurant) return res.status(404).json({ message: "Restaurant not found" });
-        res.json(restaurant);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    const restaurants = await Restaurant.find(query);
+    res.json(restaurants);
+});
+
+/* ---------------------- Get single restaurant by ID -------------------- */
+exports.getRestaurantById = asyncHandler(async (req, res) => {
+    const restaurant = await Restaurant.findById(req.params.id);
+
+    if (!restaurant) {
+        const err = new Error('Restaurant not found');
+        err.status = 404;
+        throw err;                     // handled by global error‑handler
     }
-};
 
-// Get restaurant by search (name)
-exports.searchRestaurants = async (req, res) => {
-    try {
-        const { query } = req.query;
+    res.json(restaurant);
+});
 
-        if (!query) {
-            return res.status(400).json({ message: "Search query is required." });
-        }
+/* ----------------------- Search restaurants (name / cuisine) ----------- */
+exports.searchRestaurants = asyncHandler(async (req, res) => {
+    const { search } = req.query;    // we agreed query param is ?search=
 
-        // Create a case-insensitive regex
-        const searchRegex = new RegExp(query, "i");
-
-        // Find restaurants matching the name or cuisine
-        const restaurants = await Restaurant.find({
-            $or: [{ name: searchRegex }, { cuisine: searchRegex }]
-        });
-
-        res.json(restaurants);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    if (!search) {
+        const err = new Error('Search query is required.');
+        err.status = 400;
+        throw err;
     }
-};
 
+    const regex = new RegExp(search, 'i');
+
+    const restaurants = await Restaurant.find({
+        $or: [{ name: regex }, { cuisine: regex }]
+    });
+
+    res.json(restaurants);
+});

@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     alert("Login successful!");
                     window.location.href = "home.html";
                 } else {
-                    alert(data.message || "Login failed.");
+                    showErrors(data);
                 }
             } catch (error) {
                 console.error("Login error:", error);

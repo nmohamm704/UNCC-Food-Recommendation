@@ -13,7 +13,7 @@ const seedRestaurants = async () => {
             {
                 name: 'Chipotle',
                 address: '9335 N Tryon St #101, Charlotte, NC 28262',
-                coordinates: { lat: 35.31570175805021 , lng: -80.73991387009701 },
+                coordinates: { lat: 35.31570175805021, lng: -80.73991387009701 },
                 description: 'Fast-food chain offering Mexican fare, including design-your-own burritos, tacos & bowls.',
                 categories: ['Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free'],
                 cuisine: 'Mexican',
@@ -27,7 +27,8 @@ const seedRestaurants = async () => {
                     sunday: '10:45 AM - 11:00 PM'
                 },
                 website: 'https://locations.chipotle.com/nc/charlotte/9335-n-tryon-st',
-                phone: '980-202-7032'
+                phone: '980-202-7032',
+                menu: 'https://www.chipotle.com/content/dam/chipotle/menu/nutrition/paper-menu-standard-no-pricing120221-us.pdf'
             },
             {
                 name: 'Chick-fil-A',
@@ -46,12 +47,13 @@ const seedRestaurants = async () => {
                     sunday: 'Closed'
                 },
                 website: 'https://www.chick-fil-a.com/locations/nc/university-of-nc-charlotte',
-                phone: '704-687-3391'
+                phone: '704-687-3391',
+                menu: 'https://www.chick-fil-a.com/menu'
             },
             {
                 name: 'MI Barrio Halal Food Cart',
                 address: '9340 University City Blvd, Charlotte, NC 28213',
-                coordinates: { lat: 35.330559 , lng: -80.72418 },
+                coordinates: { lat: 35.330559, lng: -80.72418 },
                 description: 'Food Truck offering Halal food options at an affordable price.',
                 categories: ['Vegetarian', 'Halal', 'Nut-Free'],
                 cuisine: 'Mediterranean',
@@ -65,12 +67,13 @@ const seedRestaurants = async () => {
                     sunday: '11:00 AM - 12:00 AM'
                 },
                 website: 'https://www.grubhub.com/restaurant/halal-cart-university-9430--university-city-blvd-charlotte/4377416',
-                phone: '516-205-0020'
+                phone: '516-205-0020',
+                menu: 'https://www.grubhub.com/restaurant/halal-cart-university-9430--university-city-blvd-charlotte/4377416'
             },
             {
                 name: "Dave's Hot Chicken",
                 address: '8932 J M Keynes Dr #100, Charlotte, NC 28262',
-                coordinates: { lat: 35.365589876467695, lng: -80.76494687471101},
+                coordinates: { lat: 35.365589876467695, lng: -80.76494687471101 },
                 description: 'Fast Food chain that serves Nashville Style hot chicken.',
                 categories: ['Vegetarian', 'Halal', 'Nut-Free'],
                 cuisine: 'Fast Food',
@@ -84,12 +87,13 @@ const seedRestaurants = async () => {
                     sunday: '11:00 AM - 10:00 PM'
                 },
                 website: 'https://restaurants.daveshotchicken.com/nc/charlotte/spicy-chicken-sandwich-on-keynes-drive/?utm_source=google&utm_medium=wiideman&utm_campaign=pageleap',
-                phone: '980-392-2120'
+                phone: '980-392-2120',
+                menu: 'https://daveshotchicken.com/menu/'
             },
             {
                 name: 'Mezeh',
                 address: '8926 J M Keynes Dr ste b, Charlotte, NC 28262',
-                coordinates: { lat: 35.312446247818635, lng: -80.74738741267593},
+                coordinates: { lat: 35.312446247818635, lng: -80.74738741267593 },
                 description: 'Fast-Casual restaurant specializing in fresh and natural mediterranean/halal food options.',
                 categories: ['Vegetarian', 'Halal', 'Vegan'],
                 cuisine: 'Mediterranean',
@@ -103,12 +107,13 @@ const seedRestaurants = async () => {
                     sunday: '10:30 AM - 11:00 PM'
                 },
                 website: 'https://mezeh.com/',
-                phone: '980-415-2782'
+                phone: '980-415-2782',
+                menu: 'https://mezeh.com/menu/'
             },
             {
                 name: 'Chex Grill & Wings',
                 address: '440 E McCullough Dr #120, Charlotte, NC 28262',
-                coordinates: { lat: 35.307907739651256, lng: -80.75116414855624},
+                coordinates: { lat: 35.307907739651256, lng: -80.75116414855624 },
                 description: 'Fast-Casual restaurant chain that provides a variety of fresh mediterranean and chicken food options.',
                 categories: ['Vegetarian', 'Halal', 'Vegan'],
                 cuisine: 'Fast Food',
@@ -122,7 +127,8 @@ const seedRestaurants = async () => {
                     sunday: '10:00 AM - 9:30 PM'
                 },
                 website: 'http://chexgrill.com/',
-                phone: '980-219-7232'
+                phone: '980-219-7232',
+                menu: 'https://chexgrill.com/menu/'
             },
             {
                 name: "Cava",
@@ -141,7 +147,8 @@ const seedRestaurants = async () => {
                     sunday: "10:45 AM - 10:00 PM"
                 },
                 website: "https://cava.com/",
-                phone: "704-243-5900"
+                phone: "704-243-5900",
+                menu: "https://cava.com/menu"
             },
             {
                 name: "Banhmi Brothers",
@@ -160,7 +167,8 @@ const seedRestaurants = async () => {
                     sunday: "11:00 AM - 7:00 PM"
                 },
                 website: "https://banhmibrothers.com/",
-                phone: "704-900-7842"
+                phone: "704-900-7842",
+                menu: "https://banhmibrothers.com/charlotte-university-banh-mi-brothers-food-menu"
             },
             {
                 name: "Mikes Vegan Grill",
@@ -178,8 +186,9 @@ const seedRestaurants = async () => {
                     saturday: "11:00 AM - 12:00 AM",
                     sunday: "11:00 AM - 9:00 PM"
                 },
-                website: "https://business.google.com/v/mikes-vegan-grill/09142340509386790890/4c32/_?caid=21058360441&agid=168806598467&gclid=Cj0KCQjwna6_BhCbARIsALId2Z3bf1q6i7MXJfB9a06bRLo3xmhJz058MWi9xybII1Tx6gRkCEi01TEaAnDjEALw_wcB&gbraid=0AAAAA9XnuEtpbal0OXiNs5at0PkB5jvqa",
-                phone: "704-909-0807"
+                website: "https://mikesvegangrill.com/lander",
+                phone: "704-909-0807",
+                menu: "https://www.grubhub.com/restaurant/mikes-vegan-grill-440-e-mccullough-dr-123-charlotte/7833120"
             },
             {
                 name: "Sarangi, Indian and Nepali Cuisine",
@@ -198,7 +207,8 @@ const seedRestaurants = async () => {
                     sunday: "11:00 AM - 3:00 PM, 5:00 PM - 9:00 PM"
                 },
                 website: "https://www.indian-food.restaurant/",
-                phone: "704-526-0716"
+                phone: "704-526-0716",
+                menu: "https://sarangiclt.com/menu/"
             },
             {
                 name: "Noodles and Company",
@@ -217,7 +227,8 @@ const seedRestaurants = async () => {
                     sunday: "10:30 AM - 9:00 PM"
                 },
                 website: "https://locations.noodles.com/nc/charlotte/8926-jm-keynes-dr?utm_campaign=soci&utm_medium=organic&utm_source=google",
-                phone: "704-549-0188"
+                phone: "704-549-0188",
+                menu: "https://www.noodles.com/menu"
             },
             {
                 name: "Nazo’s Wrap Way",
@@ -236,7 +247,8 @@ const seedRestaurants = async () => {
                     sunday: "10:30 AM - 9:00 PM"
                 },
                 website: "https://locations.noodles.com/nc/charlotte/8926-jm-keynes-dr?utm_campaign=soci&utm_medium=organic&utm_source=google",
-                phone: "704-549-0188"
+                phone: "704-549-0188",
+                menu: "https://www.doordash.com/store/wrapway-282889/"
             },
             {
                 name: "Schreiber’s on Rye",
@@ -255,7 +267,8 @@ const seedRestaurants = async () => {
                     sunday: "11:00 AM - 9:00 PM"
                 },
                 website: "https://schreibersonrye.com/",
-                phone: "704-625-2269"
+                phone: "704-625-2269",
+                menu: "https://drive.google.com/file/d/1f22vp6VasOyh93o1-eWGLfrvUxdmPh2E/view?usp=sharing"
             },
             {
                 name: "Kosher Charlotte",
@@ -274,7 +287,8 @@ const seedRestaurants = async () => {
                     sunday: "11:00 AM - 6:00 PM"
                 },
                 website: "http://www.koshercharlotte.com/",
-                phone: "704-256-0134"
+                phone: "704-256-0134",
+                menu: "https://www.doordash.com/en/store/kosher-charlotte-charlotte-24950545/"
             },
             {
                 name: "Kabab 2 Go Uptown",
@@ -293,7 +307,8 @@ const seedRestaurants = async () => {
                     sunday: "11:00 AM - 9:00 PM"
                 },
                 website: "https://kabab2go.com/",
-                phone: "704-321-1313"
+                phone: "704-321-1313",
+                menu: "https://kabab2go.com/"
             }
         ];
 

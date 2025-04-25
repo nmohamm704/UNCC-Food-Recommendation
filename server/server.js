@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const connectDB = require('./config/database');
 const morgan = require('morgan');
 const cors = require('cors');
+const errorHandler = require('./middleware/errorHandler');
 
 
 const app = express();
@@ -23,6 +24,11 @@ connectDB();
 // Routes
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/users', userRoutes);
+
+// Error Handler
+app.use((req, res) => res.status(404).json({ message: 'Route not found' }));
+
+app.use(errorHandler);
 
 module.exports = app;
 
