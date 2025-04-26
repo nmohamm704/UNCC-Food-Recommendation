@@ -55,4 +55,30 @@ document.addEventListener("DOMContentLoaded", () => {
             event.stopPropagation(); // Prevents dropdown from closing when clicking inside
         });
     }
+    // === NEW: Toggle between Sidebar and Map (only on mobile) ===
+    const toggle = document.getElementById("my-toggle");
+    const sidebar = document.getElementById("side");
+    const mapContainer = document.querySelector("main");
+
+    function updateView() {
+        if (window.innerWidth <= 480) { // Only activate on mobile screens
+            if (toggle.checked) {
+                sidebar.style.display = "none";
+                mapContainer.style.display = "flex";
+            } else {
+                sidebar.style.display = "flex";
+                mapContainer.style.display = "none";
+            }
+        } else {
+            // Desktop mode: always show both
+            sidebar.style.display = "flex";
+            mapContainer.style.display = "flex";
+        }
+    }
+
+    if (toggle && sidebar && mapContainer) {
+        updateView();
+        toggle.addEventListener("change", updateView);
+        window.addEventListener("resize", updateView); // Also update if screen size changes
+    }
 });
