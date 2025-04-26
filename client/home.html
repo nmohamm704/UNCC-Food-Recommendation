@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodMatch</title>
-    <link rel="stylesheet" href="css/iphone_style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/iphone_style.css" media="(max-width: 480px)">
     <link rel="stylesheet" href="css/map.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/fav.css">
-    <script src="js/main.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -68,94 +68,9 @@
         <div id="map"></div>
     </main>
 </div>
-
 <script src="js/map.js"></script>
 <script src="js/main.js"></script>
 <script src="js/loadUserProfile.js"></script>
 <script src="js/restaurant.js"></script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        const token = localStorage.getItem("token");
-        const matchesContainer = document.querySelector(".matches");
-
-        if (!token || !matchesContainer) return;
-
-        try {
-            const response = await fetch("http://localhost:3000/api/users/favorites", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            const favorites = await response.json();
-
-            if (!Array.isArray(favorites)) {
-                console.error("Unexpected response format:", favorites);
-                return;
-            }
-
-            // Initialize the map
-            const map = L.map("map").setView([51.505, -0.09], 13); // Default position
-
-            // Add tile layer to the map
-            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
-            }).addTo(map);
-
-            favorites.forEach((restaurant) => {
-                const div = document.createElement("div");
-                div.classList.add("match");
-                div.innerHTML = `
-                    <div class="restaurant-info">
-                        <div class="restaurant-name">${restaurant.name}</div>
-                        <div class="restaurant-cuisine">${restaurant.cuisine}</div>
-                    </div>
-                    <img src="images/fav_full.png" alt="fav full" class="fav-full" style="cursor:pointer;" data-id="${restaurant._id}" />
-                `;
-
-                const heart = div.querySelector(".fav-full");
-
-                // Favorite logic
-                heart.addEventListener("click", async () => {
-                    try {
-                        const res = await fetch(`http://localhost:3000/api/users/favorites/${restaurant._id}`, {
-                            method: "POST",
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                        });
-
-                        const result = await res.json();
-                        if (res.ok && !result.favorited) {
-                            div.remove(); // Remove from the UI
-                        } else {
-                            alert("Could not unfavorite. Try again.");
-                        }
-                    } catch (err) {
-                        console.error("Error unfavoriting:", err);
-                    }
-                });
-
-                // Restaurant box click will update the map
-                div.querySelector(".restaurant-info").addEventListener("click", () => {
-                    map.setView([restaurant.coordinates.lat, restaurant.coordinates.lng], 15);
-                    const marker = L.marker([restaurant.coordinates.lat, restaurant.coordinates.lng]).addTo(map);
-                    marker.bindPopup(`<b>${restaurant.name}</b><br>${restaurant.cuisine}`).openPopup();
-                });
-
-                matchesContainer.appendChild(div);
-            });
-        } catch (err) {
-            console.error("Failed to load favorites:", err);
-        }
-    });
-
-    // Toggle settings dropdown
-    document.getElementById("settings-icon").addEventListener("click", () => {
-        const dropdown = document.getElementById("dropdown-menu");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-    });
-</script>
 </body>
 </html>
