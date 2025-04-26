@@ -37,8 +37,16 @@ header {
     margin-right: 1rem;
     margin-bottom: 1rem;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
 
 }
+
+
+
+
+
+
 
 
 
@@ -137,4 +145,66 @@ aside {
 .fav-full {
     width: 24px;  /* Adjust the width as needed */
     height: auto; /* Maintains aspect ratio */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.logo img {
+    height: 75px;
+}
+.search-bar {
+    display: flex;
+    background: white;
+    border-radius: 20px;
+    padding: 5px 10px;
+    width: 35rem;
+}
+.search-bar input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    width: 35rem;
+}
+.icons {
+    display: flex;
+    align-items: center;
+}
+.icons button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.icons img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+.filter-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #e0e0e0;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+.matches h2 {
+    margin-bottom: 10px;
+}
+iframe {
+    width: 100%;
+    height: 100%;
 }
