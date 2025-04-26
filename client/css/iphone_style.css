@@ -434,4 +434,13 @@ aside {
     .search-bar {
         margin-bottom: 1rem; /* Add this */
     }
+
+}
+
+
+@media (max-width: 768px) {
+    .toggle-container {
+        display: flex;
+        align-items: center; /* optional for nicer alignment */
+    }
 }

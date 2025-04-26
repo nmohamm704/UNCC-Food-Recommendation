@@ -160,6 +160,7 @@ aside {
     display: none;
 }
 
+
 .toggle-label {
     position: relative;
     display: inline-block;
@@ -211,8 +212,13 @@ aside {
     gap: 15px;
 }
 .toggle-container{
-    display: flex;
+    display: none;
 }
+
+.show-toggle {
+    display: flex;  /* Or whatever display value you want */
+}
+
 
 .icons{
     display: flex;
@@ -551,3 +557,10 @@ aside {
 .edit-profile-form button:hover {
     background-color: #006bb3;
 }
+
+
+
+
+
+
+

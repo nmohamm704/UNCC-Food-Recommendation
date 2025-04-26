@@ -1,6 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("main.js loaded");
 
+    // Function to toggle visibility of toggle-container
+    function checkScreenWidth() {
+        const toggleContainer = document.querySelector('.toggle-container');
+        if (window.innerWidth <= 768) {
+            toggleContainer.classList.add('show-toggle');
+        } else {
+            toggleContainer.classList.remove('show-toggle');
+        }
+    }
+
+    // Call the function initially
+    checkScreenWidth();
+
+    // Call the function when the window is resized
+    window.addEventListener('resize', checkScreenWidth);
+
     // Toggle settings dropdown
     const settingsIcon = document.getElementById("settings-icon");
     const dropdownMenu = document.getElementById("dropdown-menu");
@@ -36,8 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // filter
-
+    // Filter
     const filterBtn = document.querySelector(".filter-btn");
     const filterDropdown = document.getElementById("filterDropdown");
 
@@ -55,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
             event.stopPropagation(); // Prevents dropdown from closing when clicking inside
         });
     }
+
     // === NEW: Toggle between Sidebar and Map (only on mobile) ===
     const toggle = document.getElementById("my-toggle");
     const sidebar = document.getElementById("side");
