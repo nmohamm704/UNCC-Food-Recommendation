@@ -115,6 +115,15 @@ function renderRestaurants(restaurants, map, container, token, filterPopup) {
             // 1) Close the filter popup if open
             filterPopup.style.display = "none";
 
+            if (window.innerWidth <= 480) {
+                const toggle = document.getElementById("my-toggle");
+                if (toggle && !toggle.checked) {
+                    toggle.checked = true; // Switch to map view
+                    const event = new Event('change'); // Trigger the toggle event manually
+                    toggle.dispatchEvent(event);
+                }
+            }
+
             // 2) Grab our details‐box & see if it's already open for *this* restaurant
             const fb = document.getElementById("restaurant-floating-box");
             if (currentOpenRestaurantId === restaurant._id && fb.style.display === "block") {
@@ -132,12 +141,15 @@ function renderRestaurants(restaurants, map, container, token, filterPopup) {
             map.flyTo(latlng, 16, { animate: true, duration: 0.5 });
 
             // 3b) After flight, open the mini popup
-            setTimeout(() => {
-                L.popup({ offset: L.point(0, -25), className: "no-arrow-popup" })
-                    .setLatLng(latlng)
-                    .setContent(`<strong>${restaurant.name}</strong>`)
-                    .openOn(map);
-            }, 500);
+            if (window.innerWidth > 480) {
+                // Only open small popup on desktop
+                setTimeout(() => {
+                    L.popup({ offset: L.point(0, -25), className: "no-arrow-popup" })
+                        .setLatLng(latlng)
+                        .setContent(`<strong>${restaurant.name}</strong>`)
+                        .openOn(map);
+                }, 500);
+            }
 
             // 3c) Show the big details box
             showFloatingBox(restaurant);
