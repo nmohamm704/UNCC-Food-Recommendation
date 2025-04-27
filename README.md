@@ -91,9 +91,7 @@ node server/seeds/seedRestaurants.js
 ### 5. Run the Server
 
 ```bash
-npm run dev
-# or
-node server.js
+node start
 ```
 
 ### 6. Open the Client
