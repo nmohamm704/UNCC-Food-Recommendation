@@ -558,9 +558,13 @@ aside {
     background-color: #006bb3;
 }
 
-
-
-
-
-
-
+.search-bar button {
+    margin-left: 0.00003rem; /* Reduced from 0.5rem */
+    padding: 0.4rem 0.8rem;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--blue-color);
+    color: white;
+    cursor: pointer;
+}

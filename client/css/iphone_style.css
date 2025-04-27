@@ -438,7 +438,7 @@ aside {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .toggle-container {
         display: flex;
         align-items: center; /* optional for nicer alignment */
