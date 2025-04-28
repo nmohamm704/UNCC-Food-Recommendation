@@ -44,15 +44,11 @@ function showFloatingBox(restaurant) {
       <img src="images/web.png" class="popup-icon"/>
       <a href="${restaurant.website}" target="_blank" class="website-text">${restaurant.website}</a>
     </div>`;
-    if (restaurant.menu) {
-        menuEl.innerHTML = `
+    menuEl.innerHTML = `
     <div class="website-container">
       <img src="images/menu.png" class="popup-icon"/>
       <a href="${restaurant.menu}" target="_blank" class="website-text">Menu</a>
     </div>`;
-    } else {
-        menuEl.innerHTML = "";  // hide if no menu
-    }
 
     fb.style.display = "block";
 
@@ -74,6 +70,15 @@ function renderRestaurants(restaurants, map, container, token, filterPopup) {
     container.innerHTML = "<h2>Matches</h2>";
 
     restaurants.forEach(restaurant => {
+        const lat = restaurant.coordinates?.lat;
+        const lng = restaurant.coordinates?.lng;
+
+        if (typeof lat !== "number" || typeof lng !== "number" || isNaN(lat) || isNaN(lng)) {
+            console.error("Invalid coordinates detected. Reloading page...");
+            window.location.reload();
+            return;
+        }
+
         const div = document.createElement("div");
         div.classList.add("match");
         const isFavorited = userFavoriteIds.includes(restaurant._id);
@@ -328,6 +333,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (fb && fb.style.display === "block" && !fb.contains(e.target)) {
             fb.style.display = "none";
             currentOpenRestaurantId = null;
+        }
+    });
+
+    let initialWidth = window.innerWidth;
+
+    window.addEventListener('resize', () => {
+        if ((initialWidth > 480 && window.innerWidth <= 480) || (initialWidth <= 480 && window.innerWidth > 480)) {
+            location.reload();
         }
     });
 });

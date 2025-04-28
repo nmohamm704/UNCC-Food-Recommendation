@@ -217,6 +217,7 @@ function showFloatingBox(restaurant) {
     const hoursElem = document.getElementById("popup-restaurant-hours");
     const phoneElem = document.getElementById("popup-restaurant-phone");
     const websiteElem = document.getElementById("popup-restaurant-website");
+    const menuElem = document.getElementById("popup-restaurant-menu");
 
     nameElem.textContent = restaurant.name;
     descriptionElem.textContent = restaurant.description;
@@ -246,6 +247,11 @@ function showFloatingBox(restaurant) {
         <a href="${restaurant.website}" target="_blank" class="website-text">${restaurant.website}</a>
       </div>
     `;
+    menuElem.innerHTML = `
+    <div class="website-container">
+      <img src="images/menu.png" class="popup-icon"/>
+      <a href="${restaurant.menu}" target="_blank" class="website-text">Menu</a>
+    </div>`;
 
     floatingBox.style.display = "block";
 
