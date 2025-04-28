@@ -34,7 +34,7 @@ A simple web app that helps students find dining options around campus based on 
 - **Profile Management**  
   Upload profile picture, update name/email/password.  
 - **Responsive Layout**  
-  Designed to work on desktop browsers (mobile support can be added).
+  Designed to work on desktop browsers and mobile devices.
 
 ---
 
@@ -60,8 +60,8 @@ A simple web app that helps students find dining options around campus based on 
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/your‑username/foodmatch.git
-cd foodmatch
+git clone https://github.com/nmohamm704/UNCC-Food-Recommendation.git
+cd UNCC-Food-Recommendation
 ```
 
 ### 2 Install Dependencies
