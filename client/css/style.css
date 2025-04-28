@@ -7,7 +7,7 @@
     --black-color: #000000;
     --title-color: #44D66E;
     --blue-color: #5aa9e6;
-
+}
 
 
 .search-bar input {
@@ -497,7 +497,7 @@ aside {
     background: var(--first-color);
     border-color: var(--first-color);
     color: #fff;
-}}
+}
 
 .profile-container {
     max-width: 800px;
