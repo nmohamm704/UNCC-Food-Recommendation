@@ -49,9 +49,7 @@
     align-items: center; /* Align all items vertically */
     gap: 15px;
 }
-.toggle-container{
-    display: flex;
-}
+
 
 .icons{
     display: flex;

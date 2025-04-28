@@ -150,15 +150,30 @@ async function loadAndRenderFavorites(query, map, container, token, markers) {
             div.querySelector(".restaurant-info").addEventListener("click", async () => {
                 const latlng = [restaurant.coordinates.lat, restaurant.coordinates.lng];
 
+                // Special case: on mobile, auto-toggle to map view
+                if (window.innerWidth <= 480) {
+                    const toggle = document.getElementById("my-toggle");
+                    if (toggle && !toggle.checked) {
+                        toggle.checked = true; // Switch to map view
+                        const event = new Event('change'); // Trigger the toggle event manually
+                        toggle.dispatchEvent(event);
+                    }
+                }
+
+                // 1) Map fly
                 map.flyTo(latlng, 16, { animate: true, duration: 0.5 });
 
-                setTimeout(() => {
-                    L.popup({ offset: L.point(0, -25), className: 'no-arrow-popup' })
-                        .setLatLng(latlng)
-                        .setContent(`<strong>${restaurant.name}</strong>`)
-                        .openOn(map);
-                }, 500);
+                // 2) Only open small popup on desktop
+                if (window.innerWidth > 480) {
+                    setTimeout(() => {
+                        L.popup({ offset: L.point(0, -25), className: 'no-arrow-popup' })
+                            .setLatLng(latlng)
+                            .setContent(`<strong>${restaurant.name}</strong>`)
+                            .openOn(map);
+                    }, 500);
+                }
 
+                // 3) Floating big box logic
                 const floatingBox = document.getElementById("restaurant-floating-box");
                 if (currentOpenRestaurantId === restaurant._id && floatingBox.style.display === "block") {
                     floatingBox.style.display = "none";
@@ -202,6 +217,7 @@ function showFloatingBox(restaurant) {
     const hoursElem = document.getElementById("popup-restaurant-hours");
     const phoneElem = document.getElementById("popup-restaurant-phone");
     const websiteElem = document.getElementById("popup-restaurant-website");
+    const menuElem = document.getElementById("popup-restaurant-menu");
 
     nameElem.textContent = restaurant.name;
     descriptionElem.textContent = restaurant.description;
@@ -231,6 +247,11 @@ function showFloatingBox(restaurant) {
         <a href="${restaurant.website}" target="_blank" class="website-text">${restaurant.website}</a>
       </div>
     `;
+    menuElem.innerHTML = `
+    <div class="website-container">
+      <img src="images/menu.png" class="popup-icon"/>
+      <a href="${restaurant.menu}" target="_blank" class="website-text">Menu</a>
+    </div>`;
 
     floatingBox.style.display = "block";
 
