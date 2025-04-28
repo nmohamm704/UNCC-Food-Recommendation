@@ -9,7 +9,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 
-const CLIENT = process.env.CLIENT_URL || 'http://localhost:58174';
+const CLIENT = process.env.CLIENT_URL || 'http://localhost:5000';
 const API    = process.env.BASE_URL   || 'http://localhost:3000';
 
 describe('FoodMatch Full E2E Flow (with precise selectors)', () => {
@@ -121,4 +121,46 @@ describe('FoodMatch Full E2E Flow (with precise selectors)', () => {
         );
         expect(popupText.length).toBeGreaterThan(0);
     });
+
+    test('7) Update profile info successfully', async () => {
+        // Go to the profile page
+        await page.goto(`${CLIENT}/profile.html`, { waitUntil: 'networkidle2' });
+
+        // Wait for the existing user name to appear
+        await page.waitForSelector('#user-name', { timeout: 10_000 });
+        const originalName = await page.$eval('#user-name', el => el.textContent.trim());
+
+        // Prepare updated values
+        const newName  = `Updated ${originalName}`;
+        const newEmail = `updated+${unique}@example.com`;
+
+        // Clear and fill in the Name field
+        await page.click('#edit-name');
+        await page.evaluate(() => { document.getElementById('edit-name').value = ''; });
+        await page.type('#edit-name', newName);
+
+        // Clear and fill in the Email field
+        await page.click('#edit-email');
+        await page.evaluate(() => { document.getElementById('edit-email').value = ''; });
+        await page.type('#edit-email', newEmail);
+
+        // Fill in the Password field (optional)
+        await page.click('#edit-password');
+        await page.type('#edit-password', 'NewPass123!');
+
+        // Upload a new profile picture (reuse the fixture)
+        await (await page.$('#edit-profile-image'))
+            .uploadFile(`${__dirname}/fixtures/profile.png`);
+
+        // Submit the form and wait for reload
+        await Promise.all([
+            page.click('#edit-profile-form button[type="submit"]'),
+            page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 30_000 }),
+        ]);
+
+        // After reload, ensure the displayed user name has updated
+        await page.waitForSelector('#user-name', { timeout: 10_000 });
+        const updatedName = await page.$eval('#user-name', el => el.textContent.trim());
+        expect(updatedName).toBe(newName);
+    })
 });
