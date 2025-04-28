@@ -9,7 +9,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 
-const CLIENT = process.env.CLIENT_URL || 'http://localhost:5000';
+const CLIENT = process.env.CLIENT_URL || 'http://localhost:4000';
 const API    = process.env.BASE_URL   || 'http://localhost:3000';
 
 describe('FoodMatch Full E2E Flow (with precise selectors)', () => {

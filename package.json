@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/start.js",
-    "serve:client": "serve client -l 5000",
+    "serve:client": "serve client -l 4000",
     "test:backend": "jest --testPathIgnorePatterns=__tests__/e2e",
     "test:frontend": "jest __tests__/e2e --runInBand",
     "test:all": "npm run test:backend && npm run test:frontend",
