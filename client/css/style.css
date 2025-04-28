@@ -100,6 +100,7 @@ aside {
     padding: 2rem;
     margin: 1rem;
     min-width: 15rem;
+    max-width: 20rem;
 }
 
 
@@ -216,7 +217,7 @@ aside {
 }
 
 .show-toggle {
-    display: flex;  /* Or whatever display value you want */
+    display: none;  /* Or whatever display value you want */
 }
 
 

@@ -444,6 +444,7 @@ aside {
         align-items: center; /* optional for nicer alignment */
     }
 }
+
 @media (max-width: 480px) {
     #restaurant-floating-box {
         top: 70px; /* a bit lower to avoid header */
