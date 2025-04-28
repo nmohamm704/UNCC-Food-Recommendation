@@ -17,6 +17,7 @@ function showFloatingBox(restaurant) {
     const hoursEl    = document.getElementById("popup-restaurant-hours");
     const phoneEl    = document.getElementById("popup-restaurant-phone");
     const webEl      = document.getElementById("popup-restaurant-website");
+    const menuEl     = document.getElementById("popup-restaurant-menu");
     const closeBtn   = document.getElementById("popup-close");
     const h = restaurant.operatingHours;
 
@@ -43,6 +44,15 @@ function showFloatingBox(restaurant) {
       <img src="images/web.png" class="popup-icon"/>
       <a href="${restaurant.website}" target="_blank" class="website-text">${restaurant.website}</a>
     </div>`;
+    if (restaurant.menu) {
+        menuEl.innerHTML = `
+    <div class="website-container">
+      <img src="images/menu.png" class="popup-icon"/>
+      <a href="${restaurant.menu}" target="_blank" class="website-text">Menu</a>
+    </div>`;
+    } else {
+        menuEl.innerHTML = "";  // hide if no menu
+    }
 
     fb.style.display = "block";
 
