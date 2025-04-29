@@ -57,7 +57,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 50px); /* Adjust based on header height */
+    height: calc(100vh - 50px);
     background-color: transparent;
     overflow: hidden;
 }
@@ -209,7 +209,7 @@ aside {
 #group {
     display: flex;
     flex-direction: row;
-    align-items: center; /* Align all items vertically */
+    align-items: center;
     gap: 15px;
 }
 .toggle-container{
@@ -217,7 +217,7 @@ aside {
 }
 
 .show-toggle {
-    display: none;  /* Or whatever display value you want */
+    display: none;
 }
 
 
@@ -264,9 +264,9 @@ aside {
 
 
 .profile-img img {
-    width: 32px; /* Adjust size */
+    width: 32px;
     height: 32px;
-    border-radius: 50%; /* Makes it circular */
+    border-radius: 50%;
 }
 
 .logo img {
@@ -275,19 +275,19 @@ aside {
     margin-right: 10px;
     height: 75px;
 
-    /* Space between logo and text */
+
 }
 
 .website-name {
-    font-size: 24px; /* Adjust text size */
+    font-size: 24px;
     font-weight: bold;
-    color: white; /* Matches header text color */
-    white-space: nowrap; /* Prevents text wrapping */
+    color: white;
+    white-space: nowrap;
 }
 
 .fav-black {
-    width: 24px;  /* Adjust the width as needed */
-    height: auto; /* Maintains aspect ratio */
+    width: 24px;
+    height: auto;
 }
 
 .filter-dropdown {
@@ -306,21 +306,21 @@ aside {
     margin: 5px 0;
 }
 
-/* Popup container styles */
+
 
 .floating-box {
     position: absolute;
     top: 20px;
-    left: 350px; /* Adjust so it sits next to your sidebar */
-    width: 340px; /* Adjust as needed */
-    min-height: 300px; /* or 100% if you want it as tall as the sidebar */
+    left: 350px;
+    width: 340px;
+    min-height: 300px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 20px;
-    z-index: 1000; /* Keep it above the map */
-    overflow-y: auto; /* If content gets too long, scroll */
+    z-index: 1000;
+    overflow-y: auto;
 }
 
 .floating-box h2 {
@@ -328,45 +328,45 @@ aside {
 }
 
 .popup-icon {
-    width: 20px;          /* Adjust width as needed */
-    height: 20px;         /* Adjust height as needed */
+    width: 20px;
+    height: 20px;
     vertical-align: text-bottom;
     margin-right: 5px;
 }
 
 .hours-container {
     display: flex;
-    align-items: flex-start;  /* Align items to the top so the icon stays with Monday */
+    align-items: flex-start;
 }
 
 .hours-lines {
-    margin-left: 5px;  /* Adjust margin so Tuesday through Sunday align with Monday's text */
+    margin-left: 5px;
 }
 
 .hours-lines div {
-    line-height: 1.4;  /* Optional: adjust line height as needed */
+    line-height: 1.4;
 }
 
 .website-container {
     display: flex;
-    align-items: flex-start;  /* Top aligns the icon with the first line of text */
-    flex-wrap: wrap;          /* Allows text to wrap if it’s too long */
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 .website-container .popup-icon {
-    flex: 0 0 auto;           /* Icon keeps its size */
+    flex: 0 0 auto;
 }
 
 .website-text {
     margin-left: 5px;
-    flex: 1;                  /* Takes up remaining space */
-    display: block;           /* Makes link text a block so that on wrap, all lines start at the same left position */
-    word-break: break-all;    /* Ensures long links break as needed; you can also use 'break-word' */
+    flex: 1;
+    display: block;
+    word-break: break-all;
 }
 
-/* Ensure the popup has proper spacing between sections */
+
 #restaurant-floating-box h2 {
-    margin-bottom: 20px; /* Space below the restaurant name */
+    margin-bottom: 20px;
 }
 
 #popup-restaurant-description {
@@ -392,7 +392,7 @@ aside {
 
 }
 
-/* Close button inside the restaurant floating box */
+
 .popup-close {
     position: absolute;
     top: 8px;
@@ -404,24 +404,23 @@ aside {
     cursor: pointer;
     color: #444;
     padding: 4px;
-    z-index: 1001;             /* sit above the box content */
+    z-index: 1001;
 }
 
-/* Slight hover effect to make it obvious it’s clickable */
+
 .popup-close:hover {
     color: #000;
     background: rgba(0,0,0,0.05);
     border-radius: 4px;
 }
 
-/* ──────────────────────────────────────────────────────── */
-/* Filter section wrapper (inside your <aside>) */
+
 .filter-section {
     position: relative;
     margin-bottom: 1rem;
 }
 
-/* Header line: icon + selected‑chips strip */
+
 .filter-header {
     display: flex;
     align-items: center;
@@ -429,13 +428,13 @@ aside {
     cursor: pointer;
 }
 
-/* Icon on the left */
+
 .filter-icon {
     width: 24px;
     height: 24px;
 }
 
-/* Where “No Filters Selected” or the chosen chips live */
+
 .selected-filters {
     display: inline-flex;
     align-items: center;
@@ -447,13 +446,13 @@ aside {
     white-space: nowrap;
 }
 
-/* Placeholder text when nothing is chosen */
+
 .selected-filters[data-placeholder]:empty::before {
     content: attr(data-placeholder);
     color: #888;
 }
 
-/* Optional: style the horizontal scrollbar */
+
 .selected-filters::-webkit-scrollbar {
     height: 6px;
 }
@@ -462,11 +461,10 @@ aside {
     border-radius: 3px;
 }
 
-/* ──────────────────────────────────────────────────────── */
-/* The floating popup of all filter buttons */
+
 .filter-popup {
     position: absolute;
-    top: 100%;       /* immediately below the header line */
+    top: 100%;
     left: 0;
     right: 0;
     margin-top: 0.25rem;
@@ -476,10 +474,10 @@ aside {
     padding: 1rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     z-index: 500;
-    display: none;   /* toggled via JS */
+    display: none;
 }
 
-/* Each filter option */
+
 .filter-option {
     display: inline-block;
     margin: 0.25rem;
@@ -493,7 +491,7 @@ aside {
     transition: background 0.2s, border-color 0.2s;
 }
 
-/* State when a filter is selected */
+
 .filter-option.selected {
     background: var(--first-color);
     border-color: var(--first-color);
@@ -560,7 +558,7 @@ aside {
 }
 
 .search-bar button {
-    margin-left: 0.00003rem; /* Reduced from 0.5rem */
+    margin-left: 0.00003rem;
     padding: 0.4rem 0.8rem;
     font-size: 14px;
     border: none;

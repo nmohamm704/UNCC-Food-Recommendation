@@ -46,7 +46,7 @@
 #group {
     display: flex;
     flex-direction: row;
-    align-items: center; /* Align all items vertically */
+    align-items: center;
     gap: 15px;
 }
 
@@ -65,7 +65,7 @@
 
 .dropdown-menu {
     position: absolute;
-    top: -33px; /* adjust based on your header */
+    top: -33px;
     right: -71px;
     background-color: white;
     border-radius: 12px;
@@ -73,7 +73,7 @@
     padding: 1rem;
     min-width: 240px;
     z-index: 999;
-    display: none; /* toggled via JS */
+    display: none;
 }
 
 .dropdown-user-info {
@@ -131,21 +131,20 @@
 
 
 .profile-img img {
-    width: 35px; /* Adjust size */
+    width: 35px;
     height: 35px;
-    border-radius: 50%; /* Makes it circular */
+    border-radius: 50%;
 }
 
 .logo img {
-    height: 50px; /* Adjust logo size */
+    height: 50px;
     width: auto;
     margin-right: 10px;
-    /* Space between logo and text */
 }
 
 .website-name {
-    font-size: 24px; /* Adjust text size */
+    font-size: 24px;
     font-weight: bold;
-    color: white; /* Matches header text color */
-    white-space: nowrap; /* Prevents text wrapping */
+    color: white;
+    white-space: nowrap;
 }

@@ -432,7 +432,7 @@ aside {
 }
 @media (max-width: 480px) {
     .search-bar {
-        margin-bottom: 1rem; /* Add this */
+        margin-bottom: 1rem;
     }
 
 }
@@ -441,17 +441,17 @@ aside {
 @media (max-width: 480px) {
     .toggle-container {
         display: flex;
-        align-items: center; /* optional for nicer alignment */
+        align-items: center;
     }
 }
 
 @media (max-width: 480px) {
     #restaurant-floating-box {
-        top: 70px; /* a bit lower to avoid header */
-        left: 100px; /* leave space for ping marker */
+        top: 70px;
+        left: 100px;
         right: 10px;
         width: auto;
-        max-width: calc(100% - 110px); /* prevent overflow */
+        max-width: calc(100% - 110px);
         border-radius: 12px;
         background: #fff;
         padding: 20px;
